@@ -445,9 +445,8 @@ select.btn {
     position: static;
   }
 
-  .footer-logo img {
-    width: 80px;
-    max-height: 6em;
+  .footer-logo {
+    display: none;
   }
 
   .mono {
