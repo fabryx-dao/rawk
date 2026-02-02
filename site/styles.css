@@ -171,14 +171,15 @@ section.double_padding {
 }
 
 .footer-logo {
-  max-height: 8em;
+  display: flex;
+  justify-content: flex-end;
   align-self: start;
-  text-align: right;
 }
 
 .footer-logo img {
   height: auto;
   width: 100px;
+  max-height: 8em;
 }
 
 ol {
@@ -445,6 +446,7 @@ select.btn {
 
   .footer-logo img {
     width: 80px;
+    max-height: 6em;
   }
 
   .mono {
