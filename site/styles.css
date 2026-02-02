@@ -139,6 +139,14 @@ a:hover {
   text-decoration: none;
 }
 
+a.dim {
+  color: var(--dim);
+}
+
+a.dim:hover {
+  color: var(--light);
+}
+
 section,
 section.col_1 {
   display: grid;
@@ -160,6 +168,16 @@ section.col_2 {
 
 section.double_padding {
   padding: var(--double-bottom-line-padding);
+}
+
+.footer-logo {
+  max-height: 8em;
+  align-self: start;
+}
+
+.footer-logo img {
+  max-height: 8em;
+  width: auto;
 }
 
 ol {
@@ -422,6 +440,14 @@ select.btn {
 
   #header {
     position: static;
+  }
+
+  .footer-logo {
+    max-height: 6em;
+  }
+
+  .footer-logo img {
+    max-height: 6em;
   }
 
   .mono {

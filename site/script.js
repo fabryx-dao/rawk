@@ -1,3 +1,9 @@
+// Set copyright year
+const copyrightYear = document.getElementById('copyright-year');
+if (copyrightYear) {
+  copyrightYear.textContent = new Date().getFullYear();
+}
+
 const accordionButtons = document.querySelectorAll(".accordion-btn");
 if (accordionButtons.length) {
   const openPanel = (panel, btn) => {
