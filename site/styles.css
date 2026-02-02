@@ -162,7 +162,7 @@ section.col_1 {
 }
 
 section.col_2 {
-  grid-template-columns: var(--title-column-width) max-content max-content;
+  grid-template-columns: var(--title-column-width) max-content 1fr;
   align-items: start;
 }
 
