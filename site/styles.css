@@ -1,6 +1,6 @@
 * {
   --title-column-width: 9ch;
-  --column-gap: 4ch;
+  --column-gap: 6ch;
   --text-wrap-width: 62ch;
   --line-height: 1.2em;
   --vertical-spacing: 7em;
@@ -9,7 +9,7 @@
   --dim: rgb(100,100,100);
   --dark: rgb(40,40,40);
   --lichen: #8FAE8E;
-  --font-size: 1em;
+  --font-size: 1.2em;
   --single-bottom-line-padding: calc(1 * var(--line-height)) 3ch calc(1 * var(--line-height)) 3ch;
   --double-bottom-line-padding: calc(1 * var(--line-height)) 3ch calc(2 * var(--line-height)) 3ch;
 }
@@ -378,7 +378,7 @@ select.btn {
 }
 
 #header > .mono {
-  max-width: 225px;
+  max-width: 400px;
   word-break: break-word;
 }
 
