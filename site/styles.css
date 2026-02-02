@@ -174,7 +174,7 @@ section.double_padding {
   display: flex;
   justify-content: flex-end;
   align-self: start;
-  width: 100%; /* Add this */
+  margin-left: auto; /* Add this */
 }
 
 .footer-logo img {
