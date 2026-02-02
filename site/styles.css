@@ -96,6 +96,7 @@ img {
 
 .accordion-chevron {
   display: inline-block;
+  transform: rotate(90deg);
   transition: transform 0.2s ease;
 }
 
@@ -111,11 +112,11 @@ img {
 }
 
 .accordion-panel.is-open + .accordion-btn .accordion-chevron {
-  transform: rotate(180deg);
+  transform: rotate(-90deg);
 }
 
 .accordion-btn.is-open .accordion-chevron {
-  transform: rotate(180deg);
+  transform: rotate(-90deg);
 }
 
 .accordion-inner {
