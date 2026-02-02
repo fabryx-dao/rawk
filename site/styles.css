@@ -206,6 +206,24 @@ video {
   padding: 0 2px;
 }
 
+.inline-buy-btn {
+  display: inline-block;
+}
+
+/* Desktop: show fixed button, hide inline buttons */
+@media (min-width: 1081px) {
+  .inline-buy-btn {
+    display: none;
+  }
+}
+
+/* Mobile: hide fixed button, show inline buttons */
+@media (max-width: 1080px) {
+  .fixed-buy-btn {
+    display: none;
+  }
+}
+
 .btn-big {
   padding: 4px 7px;
   border: 1px solid var(--lichen);
