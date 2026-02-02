@@ -203,7 +203,7 @@ video {
   top: 1.5em;
   right: 2em;
   z-index: 1000;
-  padding: 0 2px;
+  padding: 3px 6px;
 }
 
 .inline-buy-btn {
