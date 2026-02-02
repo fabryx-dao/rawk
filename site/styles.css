@@ -6,6 +6,7 @@
   --vertical-spacing: 7em;
   --half-vertical-spacing: 2.8em;
   --light: rgb(200, 201, 202);
+  --subtle: rgb(140, 141, 142);
   --dim: rgb(100,100,100);
   --dark: rgb(40,40,40);
   --lichen: #8FAE8E;
@@ -197,6 +198,10 @@ ol li {
 video {
   width: 100%;
   display: block;
+}
+
+.subtle {
+  color: var(--subtle);
 }
 
 .dim {
