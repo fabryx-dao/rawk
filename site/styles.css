@@ -173,6 +173,7 @@ section.double_padding {
 .footer-logo {
   max-height: 8em;
   align-self: start;
+  text-align: right;
 }
 
 .footer-logo img {
