@@ -1,0 +1,12 @@
+.DS_Store
+**/.DS_Store
+._*
+.AppleDouble
+.LSOverride
+**/.AppleDouble
+**/.LSOverride
+AGENTS.md
+CLAUDE.md
+BRAND.md
+ref/
+app/docs/
