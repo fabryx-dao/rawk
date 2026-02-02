@@ -176,8 +176,8 @@ section.double_padding {
 }
 
 .footer-logo img {
-  max-height: 8em;
-  width: auto;
+  height: auto;
+  width: 100px;
 }
 
 ol {
@@ -442,12 +442,8 @@ select.btn {
     position: static;
   }
 
-  .footer-logo {
-    max-height: 6em;
-  }
-
   .footer-logo img {
-    max-height: 6em;
+    width: 80px;
   }
 
   .mono {
