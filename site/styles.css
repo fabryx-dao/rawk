@@ -111,10 +111,6 @@ img {
   opacity: 1;
 }
 
-.accordion-panel.is-open + .accordion-btn .accordion-chevron {
-  transform: rotate(-90deg);
-}
-
 .accordion-btn.is-open .accordion-chevron {
   transform: rotate(-90deg);
 }
