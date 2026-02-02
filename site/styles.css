@@ -201,6 +201,14 @@ video {
   color: var(--lichen);
 }
 
+.fixed-buy-btn {
+  position: fixed;
+  top: 1.5em;
+  right: 2em;
+  z-index: 1000;
+  padding: 0 2px;
+}
+
 .btn-big {
   padding: 4px 7px;
   border: 1px solid var(--lichen);
