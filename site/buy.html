@@ -10,49 +10,193 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    .config-section {
+      margin-bottom: calc(2 * var(--line-height));
+    }
+
+    .config-label {
+      margin-bottom: calc(0.5 * var(--line-height));
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      margin-bottom: calc(0.5 * var(--line-height));
+      cursor: pointer;
+    }
+
+    .radio-option input[type="radio"] {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--light);
+      border-radius: 50%;
+      margin-right: 1ch;
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .radio-option input[type="radio"]:checked {
+      border-color: var(--lichen);
+    }
+
+    .radio-option input[type="radio"]:checked::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background-color: var(--lichen);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .radio-option:hover input[type="radio"] {
+      border-color: var(--lichen);
+    }
+
+    .radio-option label {
+      cursor: pointer;
+      flex-grow: 1;
+    }
+
+    .recommended {
+      color: var(--lichen);
+    }
+
+    .config-box {
+      border: 1px solid var(--light);
+      padding: calc(0.5 * var(--line-height)) 2ch;
+      margin: calc(2 * var(--line-height)) 0;
+    }
+
+    .total-price {
+      font-weight: 700;
+      color: var(--lichen);
+    }
+
+    .included-box {
+      border: 1px solid var(--dim);
+      padding: calc(0.5 * var(--line-height)) 2ch;
+      margin-bottom: calc(2 * var(--line-height));
+    }
+  </style>
 </head>
 <body>
   <section class="col_2">
     <div class="mono"><a href="/">Rawk</a></div>
     <div class="mono text-stack">
-      <span>No assembly required, truly plug-and-play</span>
-      <span class="dim">Ships assembled, sealed, and tested.</span>
+      <span>Configure Your Rawk</span>
+      <span class="dim">Starting at $99</span>
       <span class="spacer-2"></span>
-      <span>Core system:</span>
-      <span>++ Always-on Linux host</span>
-      <span>++ Runs OpenClaw (ex. Clawdbot) continuously</span>
-      <span>++ Handles messaging, memory, and updates locally</span>
-      <span>++ Silent, fanless operation</span>
+
+      <div class="included-box text-stack">
+        <span>WHAT'S INCLUDED</span>
+        <span class="dim">++ Hand-crafted sealed computer</span>
+        <span class="dim">   Each unit is unique: shape, color,</span>
+        <span class="dim">   and surface vary by design</span>
+        <span class="dim">++ Size: ~5"×4"×3" (13×10×8 cm)</span>
+        <span class="dim">++ OpenClaw pre-installed & tested</span>
+        <span class="dim">++ USB-C power supply (EU/US plug)</span>
+        <span class="dim">++ Setup takes 5 minutes</span>
+      </div>
+
+      <div class="config-section">
+        <span class="config-label">Choose Your RAM:</span>
+        <div class="radio-option">
+          <input type="radio" name="ram" id="ram-1gb" value="99" checked>
+          <label for="ram-1gb">1GB  $99  <span class="dim">(Basic - good for light use)</span></label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" name="ram" id="ram-2gb" value="119">
+          <label for="ram-2gb">2GB  $119  <span class="recommended">★ RECOMMENDED</span></label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" name="ram" id="ram-4gb" value="149">
+          <label for="ram-4gb">4GB  $149  <span class="dim">(Power users)</span></label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" name="ram" id="ram-8gb" value="179">
+          <label for="ram-8gb">8GB  $179  <span class="dim">(Maximum performance)</span></label>
+        </div>
+      </div>
+
+      <div class="config-section">
+        <span class="config-label">Choose Your Storage:</span>
+        <div class="radio-option">
+          <input type="radio" name="storage" id="storage-64gb" value="0" checked>
+          <label for="storage-64gb">64GB   +$0   <span class="dim">(Essentials)</span></label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" name="storage" id="storage-128gb" value="10">
+          <label for="storage-128gb">128GB  +$10  <span class="recommended">★ RECOMMENDED</span></label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" name="storage" id="storage-256gb" value="20">
+          <label for="storage-256gb">256GB  +$20  <span class="dim">(Lots of logs & files)</span></label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" name="storage" id="storage-512gb" value="50">
+          <label for="storage-512gb">512GB  +$50  <span class="dim">(Maximum capacity)</span></label>
+        </div>
+      </div>
+
+      <div class="config-box text-stack">
+        <span>YOUR CONFIG:</span>
+        <span id="config-summary" class="dim">1GB RAM + 64GB Storage</span>
+        <span class="total-price">Total: $<span id="total-price">99</span></span>
+      </div>
+
+      <a class="btn-big" href="#" id="buy-button">&gt;&gt;&gt;&gt;&gt;&gt; BUY NOW - $99</a>
       <span class="spacer-2"></span>
-      <span>Compute:</span>
-      <span>++ Quad-core ARM system</span>
-      <span>++ Tuned for long-running background workloads</span>
-      <span class="spacer-5"></span>
-      <span>Customize your Rawk:</span>
-      <span class="spacer-1"></span>
-      <span class="option-row">
-        <select class="btn-outline">
-          <option>2GB RAM</option>
-          <option>4GB RAM (+$30)</option>
-          <option>8GB RAM (+$50)</option>
-          <option>16GB RAM (+$75)</option>
-        </select>
-        <select class="btn-outline">
-          <option>64GB Storage</option>
-          <option>128GB Storage (+$25)</option>
-          <option>256GB Storage (+$30)</option>
-          <option>512GB Storage (+$40)</option>
-        </select>
-      </span>
-      <span class="spacer-1"></span>
-      <a class="btn-big" href="#">&gt;&gt;&gt;&gt;&gt;&gt; BUY NOW - $149</a>
-      <span class="spacer-5"></span>
-      <span class="dim">You will receive instructions by email after purchase.</span>
+      <span class="dim">Hand-crafted by FABRYX DAO LLC</span>
+      <span class="dim">Ships worldwide. Assembled & tested.</span>
     </div>
     <div>
       <a href="/">← Back</a>
     </div>
   </section>
+
+  <script>
+    const ramInputs = document.querySelectorAll('input[name="ram"]');
+    const storageInputs = document.querySelectorAll('input[name="storage"]');
+    const configSummary = document.getElementById('config-summary');
+    const totalPrice = document.getElementById('total-price');
+    const buyButton = document.getElementById('buy-button');
+
+    const ramLabels = {
+      '99': '1GB',
+      '119': '2GB',
+      '149': '4GB',
+      '179': '8GB'
+    };
+
+    const storageLabels = {
+      '0': '64GB',
+      '10': '128GB',
+      '20': '256GB',
+      '50': '512GB'
+    };
+
+    function updatePrice() {
+      const ramPrice = parseInt(document.querySelector('input[name="ram"]:checked').value);
+      const storagePrice = parseInt(document.querySelector('input[name="storage"]:checked').value);
+      const total = ramPrice + storagePrice;
+
+      const ramSize = ramLabels[ramPrice];
+      const storageSize = storageLabels[storagePrice];
+
+      configSummary.textContent = `${ramSize} RAM + ${storageSize} Storage`;
+      totalPrice.textContent = total;
+      buyButton.textContent = `>>>>>>>>>> BUY NOW - $${total}`;
+    }
+
+    ramInputs.forEach(input => input.addEventListener('change', updatePrice));
+    storageInputs.forEach(input => input.addEventListener('change', updatePrice));
+  </script>
 
   <script src="script.js"></script>
 </body>
