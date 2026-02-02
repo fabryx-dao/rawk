@@ -1,6 +1,6 @@
 # rawk.sh Website
 
-**Static site for rawk.sh — the Mineral Intelligence™ product homepage.**
+**Static site for Rawk™, a stone that actually does things.**
 
 ---
 
