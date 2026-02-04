@@ -426,6 +426,10 @@ select.btn {
     grid-template-columns: 1fr;
   }
 
+  section.col_1 h2 {
+    margin-bottom: var(--line-height);
+  }
+
   /* 2-column layout (default section) */
   section {
     grid-template-columns: 18vw 74vw;
