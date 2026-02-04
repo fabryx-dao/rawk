@@ -433,8 +433,7 @@ select.btn {
   }
 
   /* 3-column layout */
-  section.col_2,
-  section.double_padding:not(.col_2) {
+  section.col_2 {
     grid-template-columns: 30vw 58vw;
     grid-column-gap: 2vw;
   }
