@@ -61,27 +61,78 @@
             width: 28.47%;
         }
 
-        .deepself-item {
+        table {
+            width: 100%;
+            border-collapse: collapse;
             border: 1px solid #fff;
-            padding: 1rem;
-            margin-bottom: 1rem;
         }
 
-        .deepself-header {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            margin-bottom: 0.5rem;
+        th, td {
+            border: 1px solid #fff;
+            padding: 0.5rem;
+            text-align: left;
         }
 
-        .deepself-name {
+        th {
             font-weight: bold;
         }
 
-        .deepself-actions {
+        tbody tr {
+            cursor: pointer;
+        }
+
+        tbody tr:hover {
+            background: #222;
+        }
+
+        .actions {
             display: flex;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 767px) {
+            .actions-col {
+                display: none;
+            }
+        }
+
+        @media (min-width: 768px) {
+            tbody tr {
+                cursor: default;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #000;
+            border: 2px solid #fff;
+            padding: 2rem;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: auto;
+        }
+
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
             gap: 1rem;
-            margin-top: 0.5rem;
+            margin-top: 1rem;
         }
 
         .api-key {
@@ -92,6 +143,7 @@
             padding: 0.5rem;
             border: 1px solid #fff;
             margin-bottom: 0.5rem;
+            gap: 0.5rem;
         }
 
         .key-value {
@@ -155,51 +207,60 @@ Used: 2,847 / 10,000 (28.47%)
     <div class="section">
         <div class="section-title">YOUR DEEPSELVES</div>
         
-        <div class="deepself-item">
-            <div class="deepself-header">
-                <span class="deepself-name">higher-self</span>
-                <span>1,247 vertices</span>
-            </div>
-            <pre>Last trained: 2026-02-04 17:30
-Last consulted: 2026-02-04 18:15
-Training: 3 documents, 2 conversations</pre>
-            <div class="deepself-actions">
-                <a href="#" class="btn">Train</a>
-                <a href="#" class="btn">Test</a>
-                <a href="#" class="btn btn-danger">Delete</a>
-            </div>
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Vertices</th>
+                    <th>Last Trained</th>
+                    <th>Last Consulted</th>
+                    <th class="actions-col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr onclick="openModal('higher-self', 1247, '2026-02-04 17:30', '2026-02-04 18:15')">
+                    <td>higher-self</td>
+                    <td>1,247</td>
+                    <td>2026-02-04 17:30</td>
+                    <td>2026-02-04 18:15</td>
+                    <td class="actions-col">
+                        <div class="actions">
+                            <a href="#" class="btn" onclick="event.stopPropagation()">Train</a>
+                            <a href="#" class="btn" onclick="event.stopPropagation()">Test</a>
+                            <a href="#" class="btn btn-danger" onclick="event.stopPropagation()">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                <tr onclick="openModal('legal-expert', 1089, '2026-02-04 16:45', '2026-02-03 14:22')">
+                    <td>legal-expert</td>
+                    <td>1,089</td>
+                    <td>2026-02-04 16:45</td>
+                    <td>2026-02-03 14:22</td>
+                    <td class="actions-col">
+                        <div class="actions">
+                            <a href="#" class="btn" onclick="event.stopPropagation()">Train</a>
+                            <a href="#" class="btn" onclick="event.stopPropagation()">Test</a>
+                            <a href="#" class="btn btn-danger" onclick="event.stopPropagation()">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                <tr onclick="openModal('creative-director', 511, '2026-02-04 15:20', 'Never')">
+                    <td>creative-director</td>
+                    <td>511</td>
+                    <td>2026-02-04 15:20</td>
+                    <td>Never</td>
+                    <td class="actions-col">
+                        <div class="actions">
+                            <a href="#" class="btn" onclick="event.stopPropagation()">Train</a>
+                            <a href="#" class="btn" onclick="event.stopPropagation()">Test</a>
+                            <a href="#" class="btn btn-danger" onclick="event.stopPropagation()">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-        <div class="deepself-item">
-            <div class="deepself-header">
-                <span class="deepself-name">legal-expert</span>
-                <span>1,089 vertices</span>
-            </div>
-            <pre>Last trained: 2026-02-04 16:45
-Last consulted: 2026-02-03 14:22
-Training: 5 documents</pre>
-            <div class="deepself-actions">
-                <a href="#" class="btn">Train</a>
-                <a href="#" class="btn">Test</a>
-                <a href="#" class="btn btn-danger">Delete</a>
-            </div>
-        </div>
-
-        <div class="deepself-item">
-            <div class="deepself-header">
-                <span class="deepself-name">creative-director</span>
-                <span>511 vertices</span>
-            </div>
-            <pre>Last trained: 2026-02-04 15:20
-Last consulted: Never
-Training: 1 conversation</pre>
-            <div class="deepself-actions">
-                <a href="#" class="btn">Train</a>
-                <a href="#" class="btn">Test</a>
-                <a href="#" class="btn btn-danger">Delete</a>
-            </div>
-        </div>
-
+        <br>
         <a href="#" class="btn">+ Create New Deepself</a>
     </div>
 
@@ -229,5 +290,37 @@ Most trained: legal-expert (1,089 vertices)
 Recent activity: 8 consultations, 3 training sessions today
         </pre>
     </div>
+
+    <!-- Modal for mobile -->
+    <div id="modal" class="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <pre id="modal-info"></pre>
+            <div class="modal-actions">
+                <a href="#" class="btn">Train</a>
+                <a href="#" class="btn">Test</a>
+                <a href="#" class="btn btn-danger">Delete</a>
+                <a href="#" class="btn" onclick="closeModal()">Close</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(name, vertices, lastTrained, lastConsulted) {
+            if (window.innerWidth >= 768) return; // Only on mobile
+            
+            const info = `
+Deepself: ${name}
+Vertices: ${vertices}
+Last Trained: ${lastTrained}
+Last Consulted: ${lastConsulted}
+            `;
+            document.getElementById('modal-info').textContent = info;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+    </script>
 </body>
 </html>
