@@ -424,7 +424,10 @@ select.btn {
 
   section.col_1 {
     grid-template-columns: 1fr;
-    grid-row-gap: var(--line-height);
+  }
+
+  section.col_1 h2 {
+    margin-bottom: var(--line-height);
   }
 
   /* 2-column layout (default section) */
