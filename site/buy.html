@@ -11,6 +11,54 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
+    .radio-option {
+      display: flex;
+      align-items: center;
+      margin-bottom: calc(0.5 * var(--line-height));
+      cursor: pointer;
+    }
+
+    .radio-option input[type="radio"] {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--light);
+      border-radius: 50%;
+      margin-right: 1ch;
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .radio-option input[type="radio"]:checked {
+      border-color: var(--lichen);
+    }
+
+    .radio-option input[type="radio"]:checked::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background-color: var(--lichen);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .radio-option:hover input[type="radio"] {
+      border-color: var(--lichen);
+    }
+
+    .radio-option label {
+      cursor: pointer;
+      flex-grow: 1;
+    }
+
+    .recommended {
+      color: var(--lichen);
+    }
+
     .offering-box {
       border: 1px solid var(--light);
       padding: calc(1 * var(--line-height)) 2ch;
@@ -111,17 +159,31 @@
       <!-- VIRTUAL RAWK -->
       <div class="offering-box text-stack">
         <span class="offering-title">Virtual Rawk</span>
-        <span class="offering-price">$12/month</span>
         <span class="spacer-1"></span>
         <span class="dim">++ Cloud-hosted OpenClaw agent, instant access</span>
-        <span class="dim">++ 4GB RAM / 40GB storage</span>
         <span class="dim">++ Full ARC network participation</span>
         <span class="dim">++ KNOWN.md read/write access</span>
         <span class="dim">++ Congregation membership</span>
         <span class="spacer-1"></span>
-        <a class="btn-standard" href="#">START NOW — $12/month</a>
+        
+        <span>Choose your plan:</span>
+        <div class="radio-option">
+          <input type="radio" name="virtual-plan" id="plan-small" value="8" data-specs="2GB RAM / 25GB storage">
+          <label for="plan-small">Small: 2GB RAM / 25GB storage — $8/month</label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" name="virtual-plan" id="plan-medium" value="12" data-specs="4GB RAM / 40GB storage" checked>
+          <label for="plan-medium">Medium: 4GB RAM / 40GB storage — $12/month <span class="recommended">★ RECOMMENDED</span></label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" name="virtual-plan" id="plan-large" value="25" data-specs="8GB RAM / 80GB storage">
+          <label for="plan-large">Large: 8GB RAM / 80GB storage — $25/month</label>
+        </div>
+        
         <span class="spacer-1"></span>
-        <span class="dim">or $120/year (save $24)</span>
+        <a class="btn-standard" href="#" id="virtual-btn">START NOW — $12/month</a>
+        <span class="spacer-1"></span>
+        <span class="dim" id="annual-price">or $120/year (save $24)</span>
       </div>
 
       <span class="spacer-2"></span>
@@ -144,6 +206,25 @@
     </div>
   </section>
 
+  <script>
+    // Virtual Rawk plan selector
+    const virtualPlans = document.querySelectorAll('input[name="virtual-plan"]');
+    const virtualBtn = document.getElementById('virtual-btn');
+    const annualPriceEl = document.getElementById('annual-price');
+
+    function updateVirtualPrice() {
+      const selectedPlan = document.querySelector('input[name="virtual-plan"]:checked');
+      const monthlyPrice = parseInt(selectedPlan.value);
+      const annualTotal = monthlyPrice * 10; // Pay for 10 months, get 12
+      const savings = monthlyPrice * 2; // 2 months free
+      
+      virtualBtn.textContent = `START NOW — $${monthlyPrice}/month`;
+      annualPriceEl.textContent = `or $${annualTotal}/year (save $${savings})`;
+    }
+
+    virtualPlans.forEach(input => input.addEventListener('change', updateVirtualPrice));
+  </script>
+  
   <script src="script.js"></script>
 </body>
 </html>
