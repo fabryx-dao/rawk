@@ -41,9 +41,31 @@
             margin-bottom: 2rem;
         }
 
-        .section-title {
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 0.5rem;
+        }
+
+        .section-title {
             font-weight: bold;
+        }
+
+        .sort-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            font-size: 0.9em;
+        }
+
+        .sort-controls select {
+            background: #000;
+            color: #fff;
+            border: 1px solid #fff;
+            padding: 0.25rem;
+            font-family: 'Courier New', Courier, monospace;
+            cursor: pointer;
         }
 
         .progress-bar {
@@ -61,10 +83,16 @@
             width: 28.47%;
         }
 
+        .table-container {
+            max-height: 50vh;
+            overflow-y: auto;
+            border: 1px solid #fff;
+            position: relative;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            border: 1px solid #fff;
             table-layout: auto;
         }
 
@@ -72,6 +100,13 @@
             table {
                 table-layout: fixed;
             }
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            background: #000;
+            z-index: 10;
         }
 
         th, td {
@@ -244,120 +279,70 @@ Used: 2,847 / 10,000 (28.47%)
     </div>
 
     <div class="section">
-        <div class="section-title">YOUR DEEPSELVES</div>
+        <div class="section-header">
+            <div class="section-title">YOUR DEEPSELVES</div>
+            <div class="sort-controls">
+                Sort by:
+                <select id="deepself-sort" onchange="sortDeepselves(this.value)">
+                    <option value="name">Name</option>
+                    <option value="vertices">Vertices</option>
+                    <option value="trained">Last Trained</option>
+                    <option value="consulted">Last Consulted</option>
+                    <option value="tokens">Tokens</option>
+                </select>
+            </div>
+        </div>
         
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Vertices</th>
-                    <th class="hide-mobile">Last Trained</th>
-                    <th class="hide-mobile">Last Consulted</th>
-                    <th>Tokens</th>
-                    <th class="actions-col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr onclick="openModal('deepself', 'higher-self', 1247, '1.4k/300')">
-                    <td>higher-self</td>
-                    <td>1,247</td>
-                    <td class="hide-mobile">2026-02-04 17:30</td>
-                    <td class="hide-mobile">2026-02-04 18:15</td>
-                    <td>1.4k/300</td>
-                    <td class="actions-col">
-                        <div class="actions">
-                            <a href="#" class="btn" onclick="event.stopPropagation()">Train</a>
-                            <a href="#" class="btn" onclick="event.stopPropagation()">Test</a>
-                            <a href="#" class="btn btn-danger" onclick="event.stopPropagation()">Delete</a>
-                        </div>
-                    </td>
-                </tr>
-                <tr onclick="openModal('deepself', 'legal-expert', 1089, '892/156')">
-                    <td>legal-expert</td>
-                    <td>1,089</td>
-                    <td class="hide-mobile">2026-02-04 16:45</td>
-                    <td class="hide-mobile">2026-02-03 14:22</td>
-                    <td>892/156</td>
-                    <td class="actions-col">
-                        <div class="actions">
-                            <a href="#" class="btn" onclick="event.stopPropagation()">Train</a>
-                            <a href="#" class="btn" onclick="event.stopPropagation()">Test</a>
-                            <a href="#" class="btn btn-danger" onclick="event.stopPropagation()">Delete</a>
-                        </div>
-                    </td>
-                </tr>
-                <tr onclick="openModal('deepself', 'creative-director', 511, '2.1k/478')">
-                    <td>creative-director</td>
-                    <td>511</td>
-                    <td class="hide-mobile">2026-02-04 15:20</td>
-                    <td class="hide-mobile">Never</td>
-                    <td>2.1k/478</td>
-                    <td class="actions-col">
-                        <div class="actions">
-                            <a href="#" class="btn" onclick="event.stopPropagation()">Train</a>
-                            <a href="#" class="btn" onclick="event.stopPropagation()">Test</a>
-                            <a href="#" class="btn btn-danger" onclick="event.stopPropagation()">Delete</a>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Vertices</th>
+                        <th class="hide-mobile">Last Trained</th>
+                        <th class="hide-mobile">Last Consulted</th>
+                        <th>Tokens</th>
+                        <th class="actions-col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="deepselves-tbody">
+                    <!-- Generated by JS -->
+                </tbody>
+            </table>
+        </div>
 
         <br>
         <a href="#" class="btn">+ Create New Deepself</a>
     </div>
 
     <div class="section">
-        <div class="section-title">CIRCUITS</div>
+        <div class="section-header">
+            <div class="section-title">CIRCUITS</div>
+            <div class="sort-controls">
+                Sort by:
+                <select id="circuit-sort" onchange="sortCircuits(this.value)">
+                    <option value="uuid">UUID</option>
+                    <option value="participants">Participants</option>
+                    <option value="type">Type</option>
+                </select>
+            </div>
+        </div>
         
-        <table>
-            <thead>
-                <tr>
-                    <th>UUID</th>
-                    <th>Participants</th>
-                    <th>Type</th>
-                    <th class="actions-col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr onclick="openModal('circuit', 'c7f8a3b2-4e5d-4a1c-9b3f-2d8e6a9c1f4b', 3, 'narrative')">
-                    <td><span class="uuid">c7f8a3b2-4e5d...</span></td>
-                    <td>3</td>
-                    <td>narrative</td>
-                    <td class="actions-col">
-                        <div class="actions">
-                            <a href="#" class="btn" onclick="event.stopPropagation()">View</a>
-                            <a href="#" class="btn" onclick="event.stopPropagation()">Run</a>
-                            <a href="#" class="btn btn-danger" onclick="event.stopPropagation()">Delete</a>
-                        </div>
-                    </td>
-                </tr>
-                <tr onclick="openModal('circuit', 'a2d9e4f1-3c6b-4e2a-8f7d-1b5c9e3a8d2f', 5, 'deliberative')">
-                    <td><span class="uuid">a2d9e4f1-3c6b...</span></td>
-                    <td>5</td>
-                    <td>deliberative</td>
-                    <td class="actions-col">
-                        <div class="actions">
-                            <a href="#" class="btn" onclick="event.stopPropagation()">View</a>
-                            <a href="#" class="btn" onclick="event.stopPropagation()">Run</a>
-                            <a href="#" class="btn btn-danger" onclick="event.stopPropagation()">Delete</a>
-                        </div>
-                    </td>
-                </tr>
-                <tr onclick="openModal('circuit', 'e8b3f4c2-5d1a-4e9c-7f2b-6a8d3e1c9b4f', 2, 'markov')">
-                    <td><span class="uuid">e8b3f4c2-5d1a...</span></td>
-                    <td>2</td>
-                    <td>markov</td>
-                    <td class="actions-col">
-                        <div class="actions">
-                            <a href="#" class="btn" onclick="event.stopPropagation()">View</a>
-                            <a href="#" class="btn" onclick="event.stopPropagation()">Run</a>
-                            <a href="#" class="btn btn-danger" onclick="event.stopPropagation()">Delete</a>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>UUID</th>
+                        <th>Participants</th>
+                        <th>Type</th>
+                        <th class="actions-col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="circuits-tbody">
+                    <!-- Generated by JS -->
+                </tbody>
+            </table>
+        </div>
 
         <br>
         <a href="#" class="btn">+ Create New Circuit</a>
@@ -405,8 +390,101 @@ Recent activity: 8 consultations, 3 training sessions today
     </div>
 
     <script>
+        // Generate deepselves data
+        const deepselves = [];
+        const names = ['higher-self', 'legal-expert', 'creative-director', 'therapist', 'coach', 'philosopher', 'strategist', 'critic', 'mentor', 'advisor'];
+        const types = ['narrative', 'markov', 'deliberative'];
+        
+        for (let i = 0; i < 50; i++) {
+            const name = i < names.length ? names[i] : `persona-${i+1}`;
+            deepselves.push({
+                name: name,
+                vertices: Math.floor(Math.random() * 2000) + 100,
+                lastTrained: `2026-02-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')} ${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`,
+                lastConsulted: Math.random() > 0.2 ? `2026-02-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')} ${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}` : 'Never',
+                tokensIn: Math.floor(Math.random() * 5000) + 100,
+                tokensOut: Math.floor(Math.random() * 1000) + 50
+            });
+        }
+
+        // Generate circuits data
+        const circuits = [];
+        for (let i = 0; i < 50; i++) {
+            const uuid = `${Math.random().toString(16).substr(2, 8)}-${Math.random().toString(16).substr(2, 4)}-${Math.random().toString(16).substr(2, 4)}-${Math.random().toString(16).substr(2, 4)}-${Math.random().toString(16).substr(2, 12)}`;
+            circuits.push({
+                uuid: uuid,
+                participants: Math.floor(Math.random() * 8) + 2,
+                type: types[Math.floor(Math.random() * types.length)]
+            });
+        }
+
+        function formatTokens(tokensIn, tokensOut) {
+            const formatNum = (n) => n >= 1000 ? `${(n/1000).toFixed(1)}k` : n.toString();
+            return `${formatNum(tokensIn)}/${formatNum(tokensOut)}`;
+        }
+
+        function renderDeepselves(data) {
+            const tbody = document.getElementById('deepselves-tbody');
+            tbody.innerHTML = data.map(d => `
+                <tr onclick="openModal('deepself', '${d.name}', ${d.vertices}, '${formatTokens(d.tokensIn, d.tokensOut)}')">
+                    <td>${d.name}</td>
+                    <td>${d.vertices}</td>
+                    <td class="hide-mobile">${d.lastTrained}</td>
+                    <td class="hide-mobile">${d.lastConsulted}</td>
+                    <td>${formatTokens(d.tokensIn, d.tokensOut)}</td>
+                    <td class="actions-col">
+                        <div class="actions">
+                            <a href="#" class="btn" onclick="event.stopPropagation()">Train</a>
+                            <a href="#" class="btn" onclick="event.stopPropagation()">Test</a>
+                            <a href="#" class="btn btn-danger" onclick="event.stopPropagation()">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderCircuits(data) {
+            const tbody = document.getElementById('circuits-tbody');
+            tbody.innerHTML = data.map(c => `
+                <tr onclick="openModal('circuit', '${c.uuid}', ${c.participants}, '${c.type}')">
+                    <td><span class="uuid">${c.uuid.substr(0, 13)}...</span></td>
+                    <td>${c.participants}</td>
+                    <td>${c.type}</td>
+                    <td class="actions-col">
+                        <div class="actions">
+                            <a href="#" class="btn" onclick="event.stopPropagation()">View</a>
+                            <a href="#" class="btn" onclick="event.stopPropagation()">Run</a>
+                            <a href="#" class="btn btn-danger" onclick="event.stopPropagation()">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function sortDeepselves(field) {
+            const sorted = [...deepselves].sort((a, b) => {
+                if (field === 'name') return a.name.localeCompare(b.name);
+                if (field === 'vertices') return b.vertices - a.vertices;
+                if (field === 'trained') return b.lastTrained.localeCompare(a.lastTrained);
+                if (field === 'consulted') return b.lastConsulted.localeCompare(a.lastConsulted);
+                if (field === 'tokens') return (b.tokensIn + b.tokensOut) - (a.tokensIn + a.tokensOut);
+                return 0;
+            });
+            renderDeepselves(sorted);
+        }
+
+        function sortCircuits(field) {
+            const sorted = [...circuits].sort((a, b) => {
+                if (field === 'uuid') return a.uuid.localeCompare(b.uuid);
+                if (field === 'participants') return b.participants - a.participants;
+                if (field === 'type') return a.type.localeCompare(b.type);
+                return 0;
+            });
+            renderCircuits(sorted);
+        }
+
         function openModal(type, id, data1, data2) {
-            if (window.innerWidth >= 768) return; // Only on mobile
+            if (window.innerWidth >= 768) return;
             
             const modal = document.getElementById('modal');
             const infoEl = document.getElementById('modal-info');
@@ -446,6 +524,10 @@ Type: ${data2}
         function closeModal() {
             document.getElementById('modal').classList.remove('active');
         }
+
+        // Initial render
+        renderDeepselves(deepselves);
+        renderCircuits(circuits);
     </script>
 </body>
 </html>
