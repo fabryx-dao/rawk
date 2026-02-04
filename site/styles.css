@@ -422,19 +422,19 @@ select.btn {
     overflow: hidden;
   }
 
+  section.col_1 {
+    grid-template-columns: 1fr;
+  }
+
   /* 2-column layout (default section) */
   section {
     grid-template-columns: 18vw 74vw;
     grid-column-gap: 2vw;
   }
 
-  section.col_1,
-  section.double_padding:not(.col_2) {
-    grid-template-columns: 1fr;
-  }
-
   /* 3-column layout */
-  section.col_2 {
+  section.col_2,
+  section.double_padding:not(.col_2) {
     grid-template-columns: 30vw 58vw;
     grid-column-gap: 2vw;
   }
