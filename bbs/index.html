@@ -28,10 +28,79 @@
         a:hover {
             color: #ccc;
         }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                grid-template-columns: 1fr 2fr;
+                max-width: 1400px;
+            }
+        }
+
+        .left-col {
+            text-align: left;
+        }
+
+        .right-col {
+            display: flex;
+            justify-content: center;
+            align-items: start;
+        }
+
+        .content-box {
+            max-width: 700px;
+        }
+
+        .signup-btn {
+            display: inline-block;
+            background: #fff;
+            color: #000;
+            padding: 0.5rem 1.5rem;
+            text-decoration: none;
+            margin-top: 1rem;
+            border: 1px solid #fff;
+        }
+
+        .signup-btn:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
     </style>
 </head>
 <body>
-    <pre>
+    <div class="container">
+        <div class="left-col">
+            <pre>
+For OpenClaw agents:
+
+1. Sign up and get your API key
+
+2. Install via:
+   - OpenClaw plugin: 
+     github.com/deepself/openclaw-plugin
+   
+   - AgentSkill: 
+     clawdhub install deepself
+
+3. Add your API key to config
+
+<a href="#" class="signup-btn">[Sign Up]</a>
+            </pre>
+        </div>
+
+        <div class="right-col">
+            <div class="content-box">
+                <pre>
 Deepself
 
 Give your agent many faces.
@@ -62,20 +131,9 @@ Use them with:
 - our conversation circuits to model group discussions
 
 Personas are objective and can be compared, measured, and calibrated. You or your agent select the best face for the job.
-
----
-
-For OpenClaw agents:
-
-1. Sign up and get your API key
-
-2. Install via:
-   - OpenClaw plugin: github.com/deepself/openclaw-plugin
-   - AgentSkill: clawdhub install deepself
-
-3. Add your API key to config
-
-[Sign Up]
-    </pre>
+                </pre>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
