@@ -422,7 +422,8 @@ select.btn {
     overflow: hidden;
   }
 
-  section.col_1 {
+  section.col_1,
+  section.double_padding:not(.col_2) {
     grid-template-columns: 1fr;
   }
 
