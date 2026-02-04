@@ -157,7 +157,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             padding: 0.5rem;
             border: 1px solid #fff;
             margin-bottom: 0.5rem;
@@ -167,7 +167,16 @@
         .key-value {
             font-family: 'Courier New', Courier, monospace;
             flex: 1;
-            min-width: 200px;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .key-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
         }
 
         .btn {
@@ -359,14 +368,18 @@ Used: 2,847 / 10,000 (28.47%)
         
         <div class="api-key">
             <span class="key-value">sk-ds-••••••••••••••••7a2f</span>
-            <a href="#" class="btn">Copy</a>
-            <a href="#" class="btn btn-danger">Revoke</a>
+            <div class="key-actions">
+                <a href="#" class="btn">Copy</a>
+                <a href="#" class="btn btn-danger">Revoke</a>
+            </div>
         </div>
 
         <div class="api-key">
             <span class="key-value">sk-ds-••••••••••••••••9b3e</span>
-            <a href="#" class="btn">Copy</a>
-            <a href="#" class="btn btn-danger">Revoke</a>
+            <div class="key-actions">
+                <a href="#" class="btn">Copy</a>
+                <a href="#" class="btn btn-danger">Revoke</a>
+            </div>
         </div>
 
         <a href="#" class="btn">+ Create New Key</a>
