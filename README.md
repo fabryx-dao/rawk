@@ -13,13 +13,6 @@ Rawk is a sealed Linux computer that runs OpenClaw headlessly over Wi-Fi. It has
 - A web-based setup wizard served at `http://rawk.local`
 - Local-first: all data stays on the device
 
-## What Rawk is not
-
-- A cloud service
-- A hosted assistant
-- A general-purpose server
-- A SaaS product
-
 ---
 
 ## Initial setup
