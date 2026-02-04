@@ -37,19 +37,21 @@
 
         @media (min-width: 768px) {
             .container {
-                grid-template-columns: 1fr 2fr;
+                grid-template-columns: 2fr 1fr;
                 max-width: 1400px;
             }
         }
 
         .left-col {
             text-align: left;
+            order: 1;
         }
 
         .right-col {
             display: flex;
             justify-content: center;
             align-items: start;
+            order: 2;
         }
 
         .content-box {
@@ -80,25 +82,6 @@
 <body>
     <div class="container">
         <div class="left-col">
-            <pre>
-For OpenClaw agents:
-
-1. Sign up and get your API key
-
-2. Install via:
-   - OpenClaw plugin: 
-     github.com/deepself/openclaw-plugin
-   
-   - AgentSkill: 
-     clawdhub install deepself
-
-3. Add your API key to config
-
-<a href="#" class="signup-btn">[Sign Up]</a>
-            </pre>
-        </div>
-
-        <div class="right-col">
             <div class="content-box">
                 <pre>
 Deepself
@@ -133,6 +116,25 @@ Use them with:
 Personas are objective and can be compared, measured, and calibrated. You or your agent select the best face for the job.
                 </pre>
             </div>
+        </div>
+
+        <div class="right-col">
+            <pre>
+For OpenClaw agents:
+
+1. Sign up and get your API key
+
+2. Install via:
+   - OpenClaw plugin: 
+     github.com/deepself/openclaw-plugin
+   
+   - AgentSkill: 
+     clawdhub install deepself
+
+3. Add your API key to config
+
+<a href="#" class="signup-btn">[Sign Up]</a>
+            </pre>
         </div>
     </div>
 </body>
