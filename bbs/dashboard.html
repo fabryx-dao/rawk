@@ -270,8 +270,9 @@ Used: 2,847 / 10,000 (28.47%)
                     <option value="name">Name</option>
                     <option value="vertices">Vertices</option>
                     <option value="trained">Last Trained</option>
-                    <option value="consulted">Last Consulted</option>
+                    <option value="used">Last Used</option>
                     <option value="tokens">Tokens</option>
+                    <option value="cost">Cost</option>
                 </select>
             </div>
         </div>
@@ -283,8 +284,9 @@ Used: 2,847 / 10,000 (28.47%)
                         <th>Name</th>
                         <th>Vertices</th>
                         <th class="hide-mobile">Last Trained</th>
-                        <th class="hide-mobile">Last Consulted</th>
+                        <th class="hide-mobile">Last Used</th>
                         <th>Tokens</th>
+                        <th>Cost</th>
                         <th class="actions-col">Actions</th>
                     </tr>
                 </thead>
@@ -307,6 +309,9 @@ Used: 2,847 / 10,000 (28.47%)
                     <option value="uuid">UUID</option>
                     <option value="participants">Participants</option>
                     <option value="type">Type</option>
+                    <option value="tokens">Tokens</option>
+                    <option value="used">Last Used</option>
+                    <option value="cost">Cost</option>
                 </select>
             </div>
         </div>
@@ -318,6 +323,9 @@ Used: 2,847 / 10,000 (28.47%)
                         <th>UUID</th>
                         <th>Participants</th>
                         <th>Type</th>
+                        <th class="hide-mobile">Last Used</th>
+                        <th>Tokens</th>
+                        <th>Cost</th>
                         <th class="actions-col">Actions</th>
                     </tr>
                 </thead>
@@ -392,13 +400,16 @@ Recent activity: 8 consultations, 3 training sessions today
         
         for (let i = 0; i < 50; i++) {
             const name = i < names.length ? names[i] : `persona-${i+1}`;
+            const tokensIn = Math.floor(Math.random() * 5000) + 100;
+            const tokensOut = Math.floor(Math.random() * 1000) + 50;
             deepselves.push({
                 name: name,
                 vertices: Math.floor(Math.random() * 2000) + 100,
                 lastTrained: `2026-02-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')} ${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`,
-                lastConsulted: Math.random() > 0.2 ? `2026-02-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')} ${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}` : 'Never',
-                tokensIn: Math.floor(Math.random() * 5000) + 100,
-                tokensOut: Math.floor(Math.random() * 1000) + 50
+                lastUsed: Math.random() > 0.2 ? `2026-02-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')} ${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}` : 'Never',
+                tokensIn: tokensIn,
+                tokensOut: tokensOut,
+                cost: ((tokensIn + tokensOut) * 0.00001 * (Math.random() * 0.5 + 0.75)).toFixed(2)
             });
         }
 
@@ -406,10 +417,16 @@ Recent activity: 8 consultations, 3 training sessions today
         const circuits = [];
         for (let i = 0; i < 50; i++) {
             const uuid = `${Math.random().toString(16).substr(2, 8)}-${Math.random().toString(16).substr(2, 4)}-${Math.random().toString(16).substr(2, 4)}-${Math.random().toString(16).substr(2, 4)}-${Math.random().toString(16).substr(2, 12)}`;
+            const tokensIn = Math.floor(Math.random() * 10000) + 500;
+            const tokensOut = Math.floor(Math.random() * 3000) + 200;
             circuits.push({
                 uuid: uuid,
                 participants: Math.floor(Math.random() * 8) + 2,
-                type: types[Math.floor(Math.random() * types.length)]
+                type: types[Math.floor(Math.random() * types.length)],
+                lastUsed: Math.random() > 0.15 ? `2026-02-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')} ${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}` : 'Never',
+                tokensIn: tokensIn,
+                tokensOut: tokensOut,
+                cost: ((tokensIn + tokensOut) * 0.00001 * (Math.random() * 0.5 + 0.75)).toFixed(2)
             });
         }
 
@@ -436,12 +453,13 @@ Recent activity: 8 consultations, 3 training sessions today
         function renderDeepselves(data) {
             const tbody = document.getElementById('deepselves-tbody');
             tbody.innerHTML = data.map(d => `
-                <tr onclick="openModal('deepself', '${d.name}', ${d.vertices}, '${formatTokens(d.tokensIn, d.tokensOut)}')">
+                <tr onclick="openModal('deepself', '${d.name}', ${d.vertices}, '${formatTokens(d.tokensIn, d.tokensOut)}', '${d.cost}')">
                     <td>${d.name}</td>
                     <td>${d.vertices}</td>
                     <td class="hide-mobile">${d.lastTrained}</td>
-                    <td class="hide-mobile">${d.lastConsulted}</td>
+                    <td class="hide-mobile">${d.lastUsed}</td>
                     <td>${formatTokens(d.tokensIn, d.tokensOut)}</td>
+                    <td>$${d.cost}</td>
                     <td class="actions-col">
                         <div class="actions">
                             <a href="#" class="btn" onclick="event.stopPropagation()">Train</a>
@@ -456,10 +474,13 @@ Recent activity: 8 consultations, 3 training sessions today
         function renderCircuits(data) {
             const tbody = document.getElementById('circuits-tbody');
             tbody.innerHTML = data.map(c => `
-                <tr onclick="openModal('circuit', '${c.uuid}', ${c.participants}, '${c.type}')">
+                <tr onclick="openModal('circuit', '${c.uuid}', ${c.participants}, '${c.type}', '${formatTokens(c.tokensIn, c.tokensOut)}', '${c.cost}')">
                     <td><span class="uuid">${c.uuid.substr(0, 13)}...</span></td>
                     <td>${c.participants}</td>
                     <td>${c.type}</td>
+                    <td class="hide-mobile">${c.lastUsed}</td>
+                    <td>${formatTokens(c.tokensIn, c.tokensOut)}</td>
+                    <td>$${c.cost}</td>
                     <td class="actions-col">
                         <div class="actions">
                             <a href="#" class="btn" onclick="event.stopPropagation()">View</a>
@@ -476,8 +497,9 @@ Recent activity: 8 consultations, 3 training sessions today
                 if (field === 'name') return a.name.localeCompare(b.name);
                 if (field === 'vertices') return b.vertices - a.vertices;
                 if (field === 'trained') return b.lastTrained.localeCompare(a.lastTrained);
-                if (field === 'consulted') return b.lastConsulted.localeCompare(a.lastConsulted);
+                if (field === 'used') return b.lastUsed.localeCompare(a.lastUsed);
                 if (field === 'tokens') return (b.tokensIn + b.tokensOut) - (a.tokensIn + a.tokensOut);
+                if (field === 'cost') return parseFloat(b.cost) - parseFloat(a.cost);
                 return 0;
             });
             renderDeepselves(sorted);
@@ -488,6 +510,9 @@ Recent activity: 8 consultations, 3 training sessions today
                 if (field === 'uuid') return a.uuid.localeCompare(b.uuid);
                 if (field === 'participants') return b.participants - a.participants;
                 if (field === 'type') return a.type.localeCompare(b.type);
+                if (field === 'tokens') return (b.tokensIn + b.tokensOut) - (a.tokensIn + a.tokensOut);
+                if (field === 'used') return b.lastUsed.localeCompare(a.lastUsed);
+                if (field === 'cost') return parseFloat(b.cost) - parseFloat(a.cost);
                 return 0;
             });
             renderCircuits(sorted);
@@ -521,7 +546,7 @@ Recent activity: 8 consultations, 3 training sessions today
             renderApiKeys(sorted);
         }
 
-        function openModal(type, id, data1, data2) {
+        function openModal(type, id, data1, data2, data3, data4) {
             if (window.innerWidth >= 768) return;
             
             const modal = document.getElementById('modal');
@@ -533,6 +558,7 @@ Recent activity: 8 consultations, 3 training sessions today
 Deepself: ${id}
 Vertices: ${data1}
 Tokens: ${data2}
+Cost: $${data3}
                 `;
                 infoEl.textContent = info;
                 actionsEl.innerHTML = `
@@ -546,6 +572,8 @@ Tokens: ${data2}
 Circuit: ${id}
 Participants: ${data1} deepselves
 Type: ${data2}
+Tokens: ${data3}
+Cost: $${data4}
                 `;
                 infoEl.textContent = info;
                 actionsEl.innerHTML = `
