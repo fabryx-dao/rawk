@@ -65,12 +65,12 @@
             width: 100%;
             border-collapse: collapse;
             border: 1px solid #fff;
+            table-layout: auto;
         }
 
         @media (max-width: 767px) {
             table {
-                display: block;
-                overflow-x: auto;
+                table-layout: fixed;
             }
         }
 
@@ -78,11 +78,13 @@
             border: 1px solid #fff;
             padding: 0.5rem;
             text-align: left;
+            word-wrap: break-word;
         }
 
         @media (max-width: 767px) {
             th, td {
                 padding: 0.5rem 0.25rem;
+                font-size: 12px;
             }
         }
 
