@@ -44,6 +44,10 @@ services:
       SMTP_USER: ${SMTP_USER}
       SMTP_PASS: ${SMTP_PASS}
       FRONTEND_URL: https://console.rawk.sh
+      LINODE_DNS_TOKEN: ${LINODE_DNS_TOKEN}
+      LINODE_DOMAIN_ID: ${LINODE_DOMAIN_ID}
+      MAILCOW_API_KEY: ${MAILCOW_API_KEY}
+      HETZNER_API_TOKEN: ${HETZNER_API_TOKEN}
     depends_on:
       - postgres
       - redis
