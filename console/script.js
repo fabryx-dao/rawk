@@ -425,7 +425,7 @@ document.getElementById('btn-restart-rawk')?.addEventListener('click', async () 
 
 // Factory Reset
 document.getElementById('btn-factory-reset')?.addEventListener('click', async () => {
-  const confirmation = prompt('Type "RESET" to confirm factory reset. This will DELETE ALL DATA and redeploy from scratch.');
+  const confirmation = prompt('Type "RESET" to confirm factory reset. This will DELETE your Rawk, email alias, DNS record, and server. You can then deploy a new Rawk.');
   
   if (confirmation === 'RESET') {
     try {
@@ -435,7 +435,14 @@ document.getElementById('btn-factory-reset')?.addEventListener('click', async ()
       });
 
       const data = await response.json();
-      alert(data.message || 'Factory reset initiated');
+      
+      if (response.ok) {
+        alert(data.message || 'Rawk deleted successfully');
+        // Reload to show deploy form
+        await loadRawkStatus();
+      } else {
+        alert('Reset failed: ' + data.error);
+      }
     } catch (error) {
       alert('Reset failed: ' + error.message);
     }

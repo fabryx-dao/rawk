@@ -159,7 +159,7 @@ router.post('/restart', requireVerified, async (req, res) => {
   }
 });
 
-// Factory reset
+// Factory reset (alias for start-fresh for now)
 router.post('/reset', requireVerified, async (req, res) => {
   try {
     const rawk = await Rawk.findByUserId(req.user.id);
@@ -168,18 +168,13 @@ router.post('/reset', requireVerified, async (req, res) => {
       return res.status(404).json({ error: 'No Rawk found' });
     }
 
-    // TODO: Implement full reset
-    // 1. Delete Hetzner server
-    // 2. Delete DNS record
-    // 3. Delete email alias
-    // 4. Redeploy from scratch
+    // Use start-fresh logic: deletes DB + cleans up email/DNS/server
+    await deployment.startFresh(rawk.id);
     
-    console.log(`Reset initiated for ${rawk.name}`);
-    
-    res.json({ message: 'Reset initiated' });
+    res.json({ message: 'Rawk deleted. You can deploy a new one.' });
   } catch (err) {
     console.error('Reset error:', err);
-    res.status(500).json({ error: 'Reset failed' });
+    res.status(500).json({ error: err.message || 'Reset failed' });
   }
 });
 
