@@ -23,14 +23,22 @@ async function createAlias(rawkName) {
       }
     );
 
-    return {
-      success: true,
-      aliasId: response.data.msg[0],
-      address: `${rawkName}@rawk.sh`
-    };
+    // Mailcow returns different formats depending on success/error
+    const data = response.data;
+    
+    if (data.type === 'success' || (Array.isArray(data.msg) && data.msg.length > 0)) {
+      return {
+        success: true,
+        aliasId: Array.isArray(data.msg) ? data.msg[0] : null,
+        address: `${rawkName}@rawk.sh`
+      };
+    }
+    
+    throw new Error(data.msg || 'Unknown error creating alias');
   } catch (error) {
     console.error('Mailcow create alias error:', error.response?.data || error.message);
-    throw new Error(`Failed to create email alias: ${error.response?.data?.msg || error.message}`);
+    const errorMsg = error.response?.data?.msg || error.message;
+    throw new Error(`Failed to create email alias: ${errorMsg}`);
   }
 }
 
@@ -71,7 +79,9 @@ async function aliasExists(address) {
       }
     );
 
-    return response.data.some(alias => alias.address === address);
+    // Mailcow returns array of aliases or empty array
+    const aliases = Array.isArray(response.data) ? response.data : [];
+    return aliases.some(alias => alias.address === address);
   } catch (error) {
     console.error('Mailcow check alias error:', error.response?.data || error.message);
     return false;

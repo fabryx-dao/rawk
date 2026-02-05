@@ -11,8 +11,8 @@ const pool = require('./db');
 const DEPLOYMENT_STEPS = [
   'config_saved',
   'email_created',
-  'dns_created',
   'server_provisioned',
+  'dns_created',
   'software_installed'
 ];
 
@@ -142,11 +142,11 @@ async function executeDeployment(rawkId, name, startFromStep = 'email_created') 
         case 'email_created':
           await executeEmailStep(rawkId, name);
           break;
-        case 'dns_created':
-          await executeDNSStep(rawkId, name);
-          break;
         case 'server_provisioned':
           await executeServerStep(rawkId, name);
+          break;
+        case 'dns_created':
+          await executeDNSStep(rawkId, name);
           break;
         case 'software_installed':
           await executeSoftwareStep(rawkId, name);
@@ -207,9 +207,13 @@ async function executeDNSStep(rawkId, name) {
     throw new Error('DNS record already exists');
   }
   
-  // Get the IP address from server provisioning or use a placeholder
+  // Get the IP address from the server that was just provisioned
   const result = await pool.query('SELECT ip_address FROM rawks WHERE id = $1', [rawkId]);
-  const ipAddress = result.rows[0]?.ip_address || '0.0.0.0'; // Will be updated after server creation
+  const ipAddress = result.rows[0]?.ip_address;
+  
+  if (!ipAddress) {
+    throw new Error('Server IP address not available');
+  }
   
   const dnsResult = await linode.createDNSRecord(name, ipAddress);
   
@@ -233,17 +237,6 @@ async function executeServerStep(rawkId, name) {
       mock: serverResult.mock || false
     }
   });
-  
-  // Update DNS record with real IP if we got one
-  if (serverResult.ipAddress && serverResult.ipAddress !== '0.0.0.0') {
-    const rawkData = await pool.query('SELECT * FROM rawks WHERE id = $1', [rawkId]);
-    const rawk = rawkData.rows[0];
-    const dnsRecordId = rawk.deployment_state?.steps?.dns_created?.data?.recordId;
-    
-    if (dnsRecordId) {
-      await linode.updateDNSRecord(dnsRecordId, serverResult.ipAddress);
-    }
-  }
 }
 
 async function executeSoftwareStep(rawkId, name) {

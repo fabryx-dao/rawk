@@ -119,9 +119,9 @@ function renderDeploymentSteps(deploymentState) {
   const steps = deploymentState.steps;
   const stepLabels = {
     config_saved: '📝 Configuration saved',
-    email_created: '📧 Creating email & DNS records',
-    dns_created: '🌐 Configuring DNS',
+    email_created: '📧 Creating email alias',
     server_provisioned: '🖥️  Provisioning server',
+    dns_created: '🌐 Creating DNS record',
     software_installed: '⚙️  Installing Rawk software'
   };
   
