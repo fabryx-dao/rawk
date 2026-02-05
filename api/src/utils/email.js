@@ -1,6 +1,9 @@
 const nodemailer = require('nodemailer');
 
-const transporter = nodemailer.createTransporter({
+// Handle both CommonJS and ES6 exports
+const createTransporter = nodemailer.default?.createTransporter || nodemailer.createTransporter;
+
+const transporter = createTransporter({
   host: process.env.SMTP_HOST,
   port: process.env.SMTP_PORT,
   auth: {
