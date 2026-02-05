@@ -10,6 +10,9 @@ const rawkRoutes = require('./routes/rawk');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Trust proxy (nginx in front of API)
+app.set('trust proxy', true);
+
 // Security middleware
 app.use(helmet());
 
