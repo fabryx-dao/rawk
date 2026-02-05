@@ -100,17 +100,26 @@ document.getElementById('wizard-deploy')?.addEventListener('click', () => {
 const navItems = document.querySelectorAll('.nav-item');
 const panels = document.querySelectorAll('.panel');
 
+function showPanel(panelId) {
+  // Update nav active state
+  navItems.forEach(nav => nav.classList.remove('active'));
+  const targetNav = document.querySelector(`.nav-item[data-panel="${panelId}"]`);
+  if (targetNav) {
+    targetNav.classList.add('active');
+  }
+  
+  // Update panel visibility
+  panels.forEach(panel => panel.classList.remove('active'));
+  const targetPanel = document.getElementById(`panel-${panelId}`);
+  if (targetPanel) {
+    targetPanel.classList.add('active');
+  }
+}
+
 navItems.forEach(item => {
   item.addEventListener('click', () => {
     const panelId = item.getAttribute('data-panel');
-    
-    // Update nav active state
-    navItems.forEach(nav => nav.classList.remove('active'));
-    item.classList.add('active');
-    
-    // Update panel visibility
-    panels.forEach(panel => panel.classList.remove('active'));
-    document.getElementById(`panel-${panelId}`).classList.add('active');
+    showPanel(panelId);
   });
 });
 

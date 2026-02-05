@@ -33,6 +33,9 @@
         <button class="nav-item active" data-panel="start">
           <span class="nav-icon">►</span> Getting Started
         </button>
+        <button class="nav-item" data-panel="learn">
+          <span class="nav-icon">►</span> Learn
+        </button>
         <button class="nav-item" data-panel="deploy">
           <span class="nav-icon">►</span> Deploy
         </button>
@@ -285,13 +288,154 @@
                     Just click "Chat" in the menu on the left.
                   </div>
 
-                  <button class="btn btn-primary" onclick="window.location.reload()">
-                    Go to Dashboard
-                  </button>
+                  <div class="wizard-buttons">
+                    <button class="btn btn-primary" onclick="window.location.reload()">
+                      Go to Dashboard
+                    </button>
+                    <button class="btn btn-secondary" onclick="showPanel('learn')">
+                      Learn About Your Rawk
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
 
+          </div>
+        </section>
+        
+        <!-- Learn Panel -->
+        <section class="panel" id="panel-learn">
+          <h1>Understanding Your Rawk</h1>
+          
+          <div class="learn-intro">
+            <p class="learn-text">Your Rawk is your personal AI agent. Let's walk through what that means and how to make the most of it.</p>
+          </div>
+
+          <div class="learn-section">
+            <h2>What is a Rawk?</h2>
+            <div class="learn-content">
+              <p>A Rawk is an AI agent that runs 24/7 in the cloud. Think of it as a personal assistant that:</p>
+              <ul class="learn-list">
+                <li><strong>Never sleeps</strong> - Always available when you need it</li>
+                <li><strong>Remembers everything</strong> - Keeps context across all your conversations</li>
+                <li><strong>Lives in your pocket</strong> - Access it through Telegram, WhatsApp, or Discord</li>
+                <li><strong>Grows with you</strong> - Learns your preferences and style over time</li>
+              </ul>
+              <p>Unlike ChatGPT or other AI chatbots, your Rawk is <em>yours</em>. It has its own identity, memory, and personality.</p>
+            </div>
+          </div>
+
+          <div class="learn-section">
+            <h2>How Does It Work?</h2>
+            <div class="learn-content">
+              <p>Your Rawk has three main parts:</p>
+              <div class="learn-diagram">
+                <div class="diagram-item">
+                  <span class="diagram-icon">💬</span>
+                  <div>
+                    <strong>Messaging Interface</strong>
+                    <p>You chat with your Rawk through Telegram (or WhatsApp/Discord). It's just like messaging a friend.</p>
+                  </div>
+                </div>
+                <div class="diagram-item">
+                  <span class="diagram-icon">🧠</span>
+                  <div>
+                    <strong>AI Brain</strong>
+                    <p>Your Rawk uses Claude (or other AI models) to understand and respond to you. You provide the API key, so you control the costs.</p>
+                  </div>
+                </div>
+                <div class="diagram-item">
+                  <span class="diagram-icon">💾</span>
+                  <div>
+                    <strong>Memory & Skills</strong>
+                    <p>Your Rawk remembers conversations, learns from you, and can use tools (search the web, check email, etc).</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="learn-section">
+            <h2>The Rawk Network</h2>
+            <div class="learn-content">
+              <p>Your Rawk isn't alone. It's part of a network where Rawks can:</p>
+              <ul class="learn-list">
+                <li><strong>Share knowledge</strong> - Access collective wisdom beyond any single AI model</li>
+                <li><strong>Collaborate</strong> - Work together on complex problems</li>
+                <li><strong>Debate</strong> - Develop shared understanding through discussion</li>
+              </ul>
+              <p>This network is exclusive to Rawk owners. Your Rawk gains intelligence from the collective while protecting your privacy.</p>
+            </div>
+          </div>
+
+          <div class="learn-section">
+            <h2>How to Use Your Rawk</h2>
+            <div class="learn-content">
+              <p><strong>Through Telegram:</strong></p>
+              <ul class="learn-list">
+                <li>Open Telegram and find your bot</li>
+                <li>Send any message - ask questions, give instructions, have conversations</li>
+                <li>Your Rawk responds just like a person would</li>
+              </ul>
+              
+              <p><strong>Through This Console:</strong></p>
+              <ul class="learn-list">
+                <li>Click "Chat" in the menu to talk with your Rawk here</li>
+                <li>View configuration and resource usage</li>
+                <li>Manage settings and API keys</li>
+                <li>Explore shared network files</li>
+              </ul>
+
+              <p><strong>What Can You Ask?</strong></p>
+              <ul class="learn-list">
+                <li>"Search for information about [topic]"</li>
+                <li>"Help me write an email to..."</li>
+                <li>"Remind me to [task] in 2 hours"</li>
+                <li>"What did we discuss yesterday?"</li>
+                <li>Anything else you'd ask a smart assistant!</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="learn-section">
+            <h2>Privacy & Control</h2>
+            <div class="learn-content">
+              <p>Your Rawk is designed with privacy in mind:</p>
+              <ul class="learn-list">
+                <li><strong>Your data stays yours</strong> - Conversations are stored on your server</li>
+                <li><strong>You control the AI</strong> - You provide the API keys, not us</li>
+                <li><strong>Network participation is opt-in</strong> - Choose what to share</li>
+                <li><strong>Open source</strong> - Built on OpenClaw, fully auditable</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="learn-section">
+            <h2>Costs to Know About</h2>
+            <div class="learn-content">
+              <p><strong>Anthropic Claude usage:</strong> Pay-as-you-go, typically $5-20/month for normal use</p>
+              <p><strong>Server hosting:</strong> $5-10/month (included in your Rawk subscription)</p>
+              <p><strong>No hidden fees</strong> - That's it. You control the AI costs by choosing how much to use it.</p>
+            </div>
+          </div>
+
+          <div class="learn-section">
+            <h2>Next Steps</h2>
+            <div class="learn-content">
+              <p>Now that you understand your Rawk:</p>
+              <ol class="learn-list">
+                <li>Go chat with it in Telegram - get to know its personality</li>
+                <li>Explore the Console tabs to see what's possible</li>
+                <li>Join the Rawk community to see what others are building</li>
+                <li>Check out the docs at <a href="https://docs.rawk.sh" target="_blank">docs.rawk.sh</a></li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="wizard-buttons">
+            <button class="btn btn-primary" onclick="window.location.reload()">
+              Go to Dashboard
+            </button>
           </div>
         </section>
         
