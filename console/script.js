@@ -4,6 +4,7 @@ const API_BASE = 'https://api.rawk.sh';
 // Auth state
 let authToken = localStorage.getItem('rawk_token');
 let currentUser = null;
+let currentRawk = null;
 
 // Check auth on load
 window.addEventListener('load', async () => {
@@ -50,12 +51,194 @@ async function loadRawkStatus() {
     const data = await response.json();
 
     if (data.deployed) {
-      showDeployedState(data.rawk);
+      currentRawk = data.rawk;
+      
+      // Check if deployment is in progress or failed
+      if (data.rawk.status === 'deploying' || data.rawk.status === 'provisioning') {
+        showDeploymentProgress(data.rawk);
+      } else if (data.rawk.status === 'deployment_failed') {
+        showDeploymentError(data.rawk);
+      } else {
+        showDeployedState(data.rawk);
+      }
     } else {
       showNotDeployedState();
     }
   } catch (error) {
     console.error('Failed to load Rawk status:', error);
+  }
+}
+
+// Show deployment progress screen
+function showDeploymentProgress(rawk) {
+  showPanel('deploy');
+  
+  const logContent = document.querySelector('.log-content');
+  const statusEl = document.getElementById('deploy-status');
+  
+  logContent.innerHTML = renderDeploymentSteps(rawk.deploymentState);
+  statusEl.textContent = 'Deploying...';
+  
+  // Poll for updates
+  startDeploymentPolling();
+}
+
+// Show deployment error screen
+function showDeploymentError(rawk) {
+  showPanel('deploy');
+  
+  const logContent = document.querySelector('.log-content');
+  const statusEl = document.getElementById('deploy-status');
+  const deployBtn = document.getElementById('btn-deploy');
+  
+  logContent.innerHTML = renderDeploymentSteps(rawk.deploymentState);
+  logContent.innerHTML += `
+    <div class="log-line" style="color: #ff6b6b; margin-top: 1rem;">
+      ✗ Deployment failed: ${rawk.deploymentError || 'Unknown error'}
+    </div>
+    <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+      <button onclick="retryDeployment()" style="flex: 1; padding: 0.75rem; background: var(--lichen); color: var(--charcoal); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+        🔄 Retry from Here
+      </button>
+      <button onclick="startFresh()" style="flex: 1; padding: 0.75rem; background: #ff6b6b; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+        🗑️ Start Over
+      </button>
+    </div>
+  `;
+  
+  statusEl.textContent = 'Failed';
+  deployBtn.style.display = 'none';
+}
+
+// Render deployment steps as HTML
+function renderDeploymentSteps(deploymentState) {
+  if (!deploymentState || !deploymentState.steps) {
+    return '<div class="log-line">Preparing deployment...</div>';
+  }
+  
+  const steps = deploymentState.steps;
+  const stepLabels = {
+    config_saved: '📝 Configuration saved',
+    email_created: '📧 Creating email & DNS records',
+    dns_created: '🌐 Configuring DNS',
+    server_provisioned: '🖥️  Provisioning server',
+    software_installed: '⚙️  Installing Rawk software'
+  };
+  
+  let html = '';
+  
+  for (const [stepKey, stepLabel] of Object.entries(stepLabels)) {
+    const step = steps[stepKey];
+    if (!step) continue;
+    
+    let icon = '⏳';
+    let style = 'color: var(--slate);';
+    
+    if (step.status === 'completed') {
+      icon = '✓';
+      style = 'color: var(--lichen);';
+    } else if (step.status === 'failed') {
+      icon = '✗';
+      style = 'color: #ff6b6b;';
+    } else if (deploymentState.current_step === stepKey) {
+      icon = '⏳';
+      style = 'color: var(--lichen);';
+    }
+    
+    html += `<div class="log-line" style="${style}">${icon} ${stepLabel}</div>`;
+    
+    if (step.status === 'failed' && step.error) {
+      html += `<div class="log-line dim" style="margin-left: 1.5rem; color: #ff6b6b;">${step.error}</div>`;
+    }
+  }
+  
+  return html;
+}
+
+// Start polling for deployment updates
+let pollInterval;
+function startDeploymentPolling() {
+  // Clear any existing interval
+  if (pollInterval) {
+    clearInterval(pollInterval);
+  }
+  
+  pollInterval = setInterval(async () => {
+    const response = await fetch(`${API_BASE}/rawk/status`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+
+    const data = await response.json();
+
+    if (data.deployed) {
+      currentRawk = data.rawk;
+      
+      // Update progress display
+      const logContent = document.querySelector('.log-content');
+      logContent.innerHTML = renderDeploymentSteps(data.rawk.deploymentState);
+      
+      // Check if complete or failed
+      if (data.rawk.status === 'online') {
+        clearInterval(pollInterval);
+        logContent.innerHTML += '<div class="log-line" style="color: var(--lichen); margin-top: 1rem;">✓ Deployment complete!</div>';
+        document.getElementById('deploy-status').textContent = 'Online';
+        
+        setTimeout(() => {
+          showDeployedState(data.rawk);
+          showPanel('start');
+        }, 2000);
+      } else if (data.rawk.status === 'deployment_failed') {
+        clearInterval(pollInterval);
+        showDeploymentError(data.rawk);
+      }
+    }
+  }, 2000);
+}
+
+// Retry deployment
+async function retryDeployment() {
+  try {
+    const response = await fetch(`${API_BASE}/rawk/retry-deployment`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      // Reload to show progress
+      await loadRawkStatus();
+    } else {
+      alert('Retry failed: ' + data.error);
+    }
+  } catch (error) {
+    alert('Retry error: ' + error.message);
+  }
+}
+
+// Start fresh
+async function startFresh() {
+  const confirmation = confirm('This will delete your current Rawk and let you start over with a new name. Are you sure?');
+  
+  if (!confirmation) return;
+  
+  try {
+    const response = await fetch(`${API_BASE}/rawk/start-fresh`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert(data.message);
+      // Reload to show deploy form
+      await loadRawkStatus();
+    } else {
+      alert('Start fresh failed: ' + data.error);
+    }
+  } catch (error) {
+    alert('Start fresh error: ' + error.message);
   }
 }
 
@@ -117,21 +300,8 @@ async function deployRawk(name) {
     const data = await response.json();
 
     if (response.ok) {
-      logContent.innerHTML += `<div class="log-line">Creating DNS record: ${data.rawk.hostname}...</div>`;
-      logContent.innerHTML += `<div class="log-line">Creating email alias: ${data.rawk.email}...</div>`;
-      
-      if (data.rawk.mock) {
-        logContent.innerHTML += `<div class="log-line dim">Using mock server (Hetzner API not configured)</div>`;
-      } else {
-        logContent.innerHTML += `<div class="log-line">Provisioning Hetzner server...</div>`;
-      }
-
-      logContent.innerHTML += `<div class="log-line">Configuring ARC: ${data.rawk.arcId}...</div>`;
-      logContent.innerHTML += `<div class="log-line dim">Deployment in progress...</div>`;
-
-      // Poll for status
-      pollDeploymentStatus();
-
+      // Start polling for progress
+      startDeploymentPolling();
     } else {
       logContent.innerHTML += `<div class="log-line" style="color: #ff6b6b;">✗ Deployment failed: ${data.error}</div>`;
       statusEl.textContent = 'Failed';
@@ -140,31 +310,6 @@ async function deployRawk(name) {
     logContent.innerHTML += `<div class="log-line" style="color: #ff6b6b;">✗ Error: ${error.message}</div>`;
     statusEl.textContent = 'Error';
   }
-}
-
-// Poll deployment status
-let pollInterval;
-async function pollDeploymentStatus() {
-  pollInterval = setInterval(async () => {
-    const response = await fetch(`${API_BASE}/rawk/status`, {
-      headers: { 'Authorization': `Bearer ${authToken}` }
-    });
-
-    const data = await response.json();
-
-    if (data.deployed && data.rawk.status === 'online') {
-      clearInterval(pollInterval);
-      
-      const logContent = document.querySelector('.log-content');
-      logContent.innerHTML += `<div class="log-line" style="color: var(--lichen);">✓ Deployment complete!</div>`;
-      document.getElementById('deploy-status').textContent = 'Online';
-
-      setTimeout(() => {
-        showDeployedState(data.rawk);
-        showPanel('start');
-      }, 2000);
-    }
-  }, 3000);
 }
 
 // Logout

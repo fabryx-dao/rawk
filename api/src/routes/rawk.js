@@ -2,9 +2,7 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const Rawk = require('../models/Rawk');
 const { authenticate, requireVerified } = require('../middleware/auth');
-const mailcow = require('../utils/mailcow');
-const linode = require('../utils/linode');
-const hetzner = require('../utils/hetzner');
+const deployment = require('../utils/deployment');
 const pool = require('../utils/db');
 
 const router = express.Router();
@@ -32,7 +30,9 @@ router.get('/status', async (req, res) => {
         email: `${rawk.name}@rawk.sh`,
         hostname: `${rawk.name}.rawk.sh`,
         arcId: `r:${rawk.name}`,
-        config: rawk.config
+        config: rawk.config,
+        deploymentState: rawk.deployment_state,
+        deploymentError: rawk.deployment_error
       }
     });
   } catch (err) {
@@ -69,116 +69,24 @@ router.post('/deploy', requireVerified, [
       return res.status(400).json({ error: 'That name is already taken' });
     }
 
-    // Check if email alias already exists
-    const aliasExists = await mailcow.aliasExists(`${name}@rawk.sh`);
-    if (aliasExists) {
-      return res.status(400).json({ error: 'Email address already in use' });
-    }
-
-    // Check if DNS record already exists
-    const dnsExists = await linode.recordExists(name);
-    if (dnsExists) {
-      return res.status(400).json({ error: 'DNS record already exists' });
-    }
-
-    // Create database record
+    // Create database record with initial deployment state
     const rawk = await Rawk.create(req.user.id, name, {});
+    await Rawk.updateStatus(rawk.id, 'deploying');
     
-    // Track what we've created for rollback
-    let createdServer = null;
-    let createdDNS = null;
-    let createdAlias = null;
-    
-    try {
-      // 1. Provision Hetzner server
-      console.log(`Provisioning Hetzner server for ${name}...`);
-      createdServer = await hetzner.createServer(name);
-      
-      if (createdServer.mock) {
-        console.warn('⚠️  Using MOCK Hetzner server - no real server created');
+    // Start async deployment
+    await deployment.initializeDeployment(rawk.id, name);
+
+    res.status(202).json({
+      message: 'Deployment started',
+      rawk: {
+        id: rawk.id,
+        name: name,
+        email: `${name}@rawk.sh`,
+        hostname: `${name}.rawk.sh`,
+        arcId: `r:${name}`,
+        status: 'deploying'
       }
-
-      await Rawk.updateStatus(rawk.id, 'provisioning', {
-        serverId: createdServer.serverId,
-        ipAddress: createdServer.ipAddress
-      });
-
-      // 2. Create DNS A record
-      console.log(`Creating DNS record for ${name}.rawk.sh -> ${createdServer.ipAddress}...`);
-      createdDNS = await linode.createDNSRecord(name, createdServer.ipAddress);
-      
-      await Rawk.updateStatus(rawk.id, 'configuring', {
-        dnsRecordId: createdDNS.recordId
-      });
-
-      // 3. Create email alias
-      console.log(`Creating email alias ${name}@rawk.sh...`);
-      createdAlias = await mailcow.createAlias(name);
-
-      await Rawk.updateStatus(rawk.id, 'deploying', {
-        emailAlias: createdAlias.address,
-        deployedAt: new Date()
-      });
-
-      // 4. TODO: Trigger Ansible deployment
-      console.log(`Ansible deployment for ${name} would be triggered here`);
-      
-      // For now, mark as online after brief delay
-      setTimeout(async () => {
-        try {
-          await Rawk.updateStatus(rawk.id, 'online');
-          console.log(`✅ Rawk ${name} deployment complete`);
-        } catch (err) {
-          console.error('Failed to update final status:', err);
-        }
-      }, 5000);
-
-      res.status(202).json({
-        message: 'Deployment started',
-        rawk: {
-          id: rawk.id,
-          name: name,
-          email: `${name}@rawk.sh`,
-          hostname: `${name}.rawk.sh`,
-          arcId: `r:${name}`,
-          ipAddress: createdServer.ipAddress,
-          status: 'deploying',
-          mock: createdServer.mock || false
-        }
-      });
-
-    } catch (deployError) {
-      // Rollback on failure
-      console.error('Deployment error, rolling back:', deployError);
-      
-      // Clean up created resources (in reverse order)
-      try {
-        if (createdAlias) {
-          console.log(`Cleaning up email alias: ${createdAlias.address}`);
-          await mailcow.deleteAlias(createdAlias.address);
-        }
-        if (createdDNS) {
-          console.log(`Cleaning up DNS record: ${createdDNS.recordId}`);
-          await linode.deleteDNSRecord(createdDNS.recordId);
-        }
-        if (createdServer && !createdServer.mock) {
-          console.log(`Cleaning up server: ${createdServer.serverId}`);
-          await hetzner.deleteServer(createdServer.serverId);
-        }
-      } catch (cleanupError) {
-        console.error('Cleanup error:', cleanupError);
-      }
-
-      // DELETE the database record (don't just mark as error)
-      try {
-        console.log(`Deleting database record for failed deployment: ${rawk.id}`);
-        await pool.query('DELETE FROM rawks WHERE id = $1', [rawk.id]);
-      } catch (deleteError) {
-        console.error('Failed to delete database record:', deleteError);
-      }
-      
-      throw deployError;
-    }
+    });
 
   } catch (err) {
     console.error('Deploy error:', err);
@@ -186,6 +94,49 @@ router.post('/deploy', requireVerified, [
       error: 'Deployment failed',
       details: process.env.NODE_ENV === 'production' ? undefined : err.message
     });
+  }
+});
+
+// Retry deployment from failed step
+router.post('/retry-deployment', requireVerified, async (req, res) => {
+  try {
+    const rawk = await Rawk.findByUserId(req.user.id);
+    
+    if (!rawk) {
+      return res.status(404).json({ error: 'No Rawk found' });
+    }
+
+    if (rawk.status !== 'deployment_failed') {
+      return res.status(400).json({ error: 'Deployment has not failed' });
+    }
+
+    const result = await deployment.retryDeployment(rawk.id);
+    
+    res.json({ 
+      message: 'Retrying deployment',
+      from: result.from
+    });
+  } catch (err) {
+    console.error('Retry error:', err);
+    res.status(500).json({ error: err.message || 'Retry failed' });
+  }
+});
+
+// Start fresh - delete everything and allow re-deploy
+router.post('/start-fresh', requireVerified, async (req, res) => {
+  try {
+    const rawk = await Rawk.findByUserId(req.user.id);
+    
+    if (!rawk) {
+      return res.status(404).json({ error: 'No Rawk found' });
+    }
+
+    await deployment.startFresh(rawk.id);
+    
+    res.json({ message: 'Rawk deleted, you can deploy a new one' });
+  } catch (err) {
+    console.error('Start fresh error:', err);
+    res.status(500).json({ error: err.message || 'Start fresh failed' });
   }
 });
 

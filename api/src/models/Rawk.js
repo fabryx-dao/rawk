@@ -50,6 +50,59 @@ class Rawk {
     return result.rows[0];
   }
 
+  static async updateDeploymentStep(id, step, status, data = {}) {
+    const timestamp = new Date().toISOString();
+    const stepData = {
+      status,
+      timestamp,
+      error: data.error || null,
+      data: data.data || {}
+    };
+
+    const result = await pool.query(
+      `UPDATE rawks 
+       SET deployment_state = jsonb_set(
+         deployment_state,
+         $1,
+         $2::jsonb
+       ),
+       deployment_error = $3,
+       updated_at = NOW()
+       WHERE id = $4
+       RETURNING *`,
+      [`{steps,${step}}`, JSON.stringify(stepData), data.error || null, id]
+    );
+
+    return result.rows[0];
+  }
+
+  static async setCurrentStep(id, step) {
+    const result = await pool.query(
+      `UPDATE rawks 
+       SET deployment_state = jsonb_set(deployment_state, '{current_step}', $1::jsonb),
+       updated_at = NOW()
+       WHERE id = $2
+       RETURNING *`,
+      [JSON.stringify(step), id]
+    );
+    return result.rows[0];
+  }
+
+  static async setRetryable(id, canRetry, retryFromStep = null) {
+    const result = await pool.query(
+      `UPDATE rawks 
+       SET deployment_state = deployment_state || jsonb_build_object(
+         'can_retry', $1::boolean,
+         'retry_from_step', $2::text
+       ),
+       updated_at = NOW()
+       WHERE id = $3
+       RETURNING *`,
+      [canRetry, retryFromStep, id]
+    );
+    return result.rows[0];
+  }
+
   static async checkNameExists(name) {
     const result = await pool.query(
       'SELECT id FROM rawks WHERE name = $1',

@@ -37,6 +37,35 @@ async function createDNSRecord(rawkName, ipAddress) {
 }
 
 /**
+ * Update DNS A record IP address
+ */
+async function updateDNSRecord(recordId, ipAddress) {
+  try {
+    const response = await axios.put(
+      `${LINODE_API_URL}/domains/${LINODE_DOMAIN_ID}/records/${recordId}`,
+      {
+        target: ipAddress,
+        ttl_sec: 300
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${LINODE_DNS_TOKEN}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    return {
+      success: true,
+      recordId: response.data.id
+    };
+  } catch (error) {
+    console.error('Linode DNS update error:', error.response?.data || error.message);
+    throw new Error(`Failed to update DNS record: ${error.response?.data?.errors?.[0]?.reason || error.message}`);
+  }
+}
+
+/**
  * Delete DNS A record
  */
 async function deleteDNSRecord(recordId) {
@@ -82,6 +111,7 @@ async function recordExists(rawkName) {
 
 module.exports = {
   createDNSRecord,
+  updateDNSRecord,
   deleteDNSRecord,
   recordExists
 };
