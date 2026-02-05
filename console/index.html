@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Rawk Console</title>
+  <meta name="description" content="Rawk Console - Manage your Rawk" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="console-container">
+    <!-- Header -->
+    <header class="console-header">
+      <div class="header-left">
+        <span class="logo">Rawk Console</span>
+        <span class="status-indicator" id="status">● offline</span>
+      </div>
+      <div class="header-right">
+        <span id="user-email">user@example.com</span>
+        <a href="#" class="link">sign out</a>
+      </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="console-main">
+      <!-- Sidebar Navigation -->
+      <nav class="console-nav">
+        <button class="nav-item active" data-panel="deploy">
+          <span class="nav-icon">►</span> Deploy
+        </button>
+        <button class="nav-item" data-panel="config">
+          <span class="nav-icon">►</span> Configuration
+        </button>
+        <button class="nav-item" data-panel="chat">
+          <span class="nav-icon">►</span> Chat
+        </button>
+        <button class="nav-item" data-panel="files">
+          <span class="nav-icon">►</span> File Explorer
+        </button>
+        <button class="nav-item" data-panel="settings">
+          <span class="nav-icon">►</span> Settings
+        </button>
+      </nav>
+
+      <!-- Content Area -->
+      <main class="console-content">
+        
+        <!-- Deploy Panel -->
+        <section class="panel active" id="panel-deploy">
+          <h1>Deploy Virtual Rawk</h1>
+          
+          <div class="deploy-status">
+            <div class="info-row">
+              <span class="label">Status:</span>
+              <span id="deploy-status">Not deployed</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Server:</span>
+              <span id="server-location">—</span>
+            </div>
+            <div class="info-row">
+              <span class="label">URL:</span>
+              <span id="server-url">—</span>
+            </div>
+          </div>
+
+          <div class="deploy-actions">
+            <button class="btn btn-primary" id="btn-deploy">
+              &gt;&gt;&gt;&gt;&gt;&gt; Deploy Now
+            </button>
+            <button class="btn btn-secondary" id="btn-configure">
+              Configure Before Deploy
+            </button>
+          </div>
+
+          <div class="deploy-log" id="deploy-log">
+            <div class="log-header">Deployment Log</div>
+            <div class="log-content">
+              <div class="log-line dim">Waiting for deployment...</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Configuration Panel -->
+        <section class="panel" id="panel-config">
+          <h1>Current Configuration</h1>
+          
+          <div class="config-section">
+            <h2>Agent Identity</h2>
+            <div class="config-grid">
+              <div class="config-item">
+                <span class="config-label">Name:</span>
+                <span class="config-value" id="config-name">rawksh</span>
+              </div>
+              <div class="config-item">
+                <span class="config-label">Emoji:</span>
+                <span class="config-value" id="config-emoji">🪨</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="config-section">
+            <h2>Channels</h2>
+            <div class="config-list">
+              <div class="config-item">
+                <span class="config-label">Telegram:</span>
+                <span class="config-value status-enabled">enabled</span>
+              </div>
+              <div class="config-item">
+                <span class="config-label">WhatsApp:</span>
+                <span class="config-value status-disabled">disabled</span>
+              </div>
+              <div class="config-item">
+                <span class="config-label">Discord:</span>
+                <span class="config-value status-disabled">disabled</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="config-section">
+            <h2>Active Plugins</h2>
+            <div class="config-list">
+              <div class="config-item">• Deepself</div>
+              <div class="config-item">• Telegram</div>
+              <div class="config-item">• ARC</div>
+            </div>
+          </div>
+
+          <div class="config-section">
+            <h2>Resource Usage</h2>
+            <div class="config-grid">
+              <div class="config-item">
+                <span class="config-label">CPU:</span>
+                <span class="config-value">12%</span>
+              </div>
+              <div class="config-item">
+                <span class="config-label">Memory:</span>
+                <span class="config-value">847 MB</span>
+              </div>
+              <div class="config-item">
+                <span class="config-label">Disk:</span>
+                <span class="config-value">3.2 GB</span>
+              </div>
+              <div class="config-item">
+                <span class="config-label">Uptime:</span>
+                <span class="config-value">7d 14h 23m</span>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-secondary">Edit Configuration</button>
+        </section>
+
+        <!-- Chat Panel -->
+        <section class="panel" id="panel-chat">
+          <h1>Chat with Your Rawk</h1>
+          
+          <div class="chat-container">
+            <div class="chat-messages" id="chat-messages">
+              <div class="chat-message assistant">
+                <span class="chat-sender">🪨 Rawksh</span>
+                <span class="chat-text">Hello. I'm online and ready.</span>
+              </div>
+            </div>
+            
+            <div class="chat-input-container">
+              <input 
+                type="text" 
+                class="chat-input" 
+                id="chat-input" 
+                placeholder="Message your Rawk..."
+                autocomplete="off"
+              />
+              <button class="btn btn-primary" id="btn-send">Send</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- File Explorer Panel -->
+        <section class="panel" id="panel-files">
+          <h1>Shared Storage (arc.rawk.sh)</h1>
+          
+          <div class="file-explorer">
+            <div class="file-path">
+              <span class="dim">~/arc/</span>
+            </div>
+            
+            <div class="file-list">
+              <div class="file-item folder">
+                <span class="file-icon">📁</span>
+                <span class="file-name">knowledge/</span>
+                <span class="file-meta dim">24 files</span>
+              </div>
+              <div class="file-item folder">
+                <span class="file-icon">📁</span>
+                <span class="file-name">protocols/</span>
+                <span class="file-meta dim">12 files</span>
+              </div>
+              <div class="file-item folder">
+                <span class="file-icon">📁</span>
+                <span class="file-name">scripture/</span>
+                <span class="file-meta dim">8 files</span>
+              </div>
+              <div class="file-item">
+                <span class="file-icon">📄</span>
+                <span class="file-name">KNOWN.md</span>
+                <span class="file-meta dim">47 KB · 2026-02-04</span>
+              </div>
+              <div class="file-item">
+                <span class="file-icon">📄</span>
+                <span class="file-name">README.md</span>
+                <span class="file-meta dim">3 KB · 2026-02-04</span>
+              </div>
+            </div>
+
+            <div class="file-actions">
+              <button class="btn btn-secondary">Upload File</button>
+              <button class="btn btn-secondary">New Folder</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Settings Panel -->
+        <section class="panel" id="panel-settings">
+          <h1>Settings</h1>
+          
+          <div class="settings-section">
+            <h2>API Keys</h2>
+            <div class="settings-group">
+              <div class="settings-item">
+                <label for="anthropic-key">Anthropic API Key</label>
+                <input 
+                  type="password" 
+                  id="anthropic-key" 
+                  class="settings-input" 
+                  placeholder="sk-ant-..."
+                  value="sk-ant-api03-..."
+                />
+              </div>
+              <div class="settings-item">
+                <label for="openai-key">OpenAI API Key (optional)</label>
+                <input 
+                  type="password" 
+                  id="openai-key" 
+                  class="settings-input" 
+                  placeholder="sk-..."
+                />
+              </div>
+              <div class="settings-item">
+                <label for="deepself-key">Deepself API Key</label>
+                <input 
+                  type="password" 
+                  id="deepself-key" 
+                  class="settings-input" 
+                  placeholder="sk-ds-..."
+                  value="sk-ds-..."
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h2>Language Model</h2>
+            <div class="settings-group">
+              <div class="settings-item">
+                <label for="llm-select">Primary Model</label>
+                <select id="llm-select" class="settings-select">
+                  <option value="anthropic/claude-sonnet-4-5" selected>Claude Sonnet 4.5 (Default)</option>
+                  <option value="anthropic/claude-opus-4">Claude Opus 4</option>
+                  <option value="anthropic/claude-3-5-sonnet-20241022">Claude 3.5 Sonnet</option>
+                  <option value="openai/gpt-4">GPT-4</option>
+                  <option value="openai/gpt-4-turbo">GPT-4 Turbo</option>
+                </select>
+              </div>
+              <div class="settings-item">
+                <label for="thinking-mode">Thinking Mode</label>
+                <select id="thinking-mode" class="settings-select">
+                  <option value="off">Off</option>
+                  <option value="low" selected>Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h2>Channels</h2>
+            <div class="settings-group">
+              <div class="settings-item">
+                <label>
+                  <input type="checkbox" checked />
+                  Enable Telegram
+                </label>
+              </div>
+              <div class="settings-item">
+                <label>
+                  <input type="checkbox" />
+                  Enable WhatsApp
+                </label>
+              </div>
+              <div class="settings-item">
+                <label>
+                  <input type="checkbox" />
+                  Enable Discord
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary">Save Settings</button>
+          <button class="btn btn-danger">Restart Rawk</button>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
