@@ -5,6 +5,7 @@ const { authenticate, requireVerified } = require('../middleware/auth');
 const mailcow = require('../utils/mailcow');
 const linode = require('../utils/linode');
 const hetzner = require('../utils/hetzner');
+const pool = require('../utils/db');
 
 const router = express.Router();
 
@@ -83,34 +84,39 @@ router.post('/deploy', requireVerified, [
     // Create database record
     const rawk = await Rawk.create(req.user.id, name, {});
     
+    // Track what we've created for rollback
+    let createdServer = null;
+    let createdDNS = null;
+    let createdAlias = null;
+    
     try {
       // 1. Provision Hetzner server
       console.log(`Provisioning Hetzner server for ${name}...`);
-      const server = await hetzner.createServer(name);
+      createdServer = await hetzner.createServer(name);
       
-      if (server.mock) {
+      if (createdServer.mock) {
         console.warn('⚠️  Using MOCK Hetzner server - no real server created');
       }
 
       await Rawk.updateStatus(rawk.id, 'provisioning', {
-        serverId: server.serverId,
-        ipAddress: server.ipAddress
+        serverId: createdServer.serverId,
+        ipAddress: createdServer.ipAddress
       });
 
       // 2. Create DNS A record
-      console.log(`Creating DNS record for ${name}.rawk.sh -> ${server.ipAddress}...`);
-      const dns = await linode.createDNSRecord(name, server.ipAddress);
+      console.log(`Creating DNS record for ${name}.rawk.sh -> ${createdServer.ipAddress}...`);
+      createdDNS = await linode.createDNSRecord(name, createdServer.ipAddress);
       
       await Rawk.updateStatus(rawk.id, 'configuring', {
-        dnsRecordId: dns.recordId
+        dnsRecordId: createdDNS.recordId
       });
 
       // 3. Create email alias
       console.log(`Creating email alias ${name}@rawk.sh...`);
-      const alias = await mailcow.createAlias(name);
+      createdAlias = await mailcow.createAlias(name);
 
       await Rawk.updateStatus(rawk.id, 'deploying', {
-        emailAlias: alias.address,
+        emailAlias: createdAlias.address,
         deployedAt: new Date()
       });
 
@@ -135,9 +141,9 @@ router.post('/deploy', requireVerified, [
           email: `${name}@rawk.sh`,
           hostname: `${name}.rawk.sh`,
           arcId: `r:${name}`,
-          ipAddress: server.ipAddress,
+          ipAddress: createdServer.ipAddress,
           status: 'deploying',
-          mock: server.mock || false
+          mock: createdServer.mock || false
         }
       });
 
@@ -145,20 +151,31 @@ router.post('/deploy', requireVerified, [
       // Rollback on failure
       console.error('Deployment error, rolling back:', deployError);
       
-      // Clean up created resources
-      // Note: This is best-effort cleanup
+      // Clean up created resources (in reverse order)
       try {
-        if (deployError.dnsRecordId) {
-          await linode.deleteDNSRecord(deployError.dnsRecordId);
+        if (createdAlias) {
+          console.log(`Cleaning up email alias: ${createdAlias.address}`);
+          await mailcow.deleteAlias(createdAlias.address);
         }
-        if (deployError.emailAlias) {
-          await mailcow.deleteAlias(deployError.emailAlias);
+        if (createdDNS) {
+          console.log(`Cleaning up DNS record: ${createdDNS.recordId}`);
+          await linode.deleteDNSRecord(createdDNS.recordId);
+        }
+        if (createdServer && !createdServer.mock) {
+          console.log(`Cleaning up server: ${createdServer.serverId}`);
+          await hetzner.deleteServer(createdServer.serverId);
         }
       } catch (cleanupError) {
         console.error('Cleanup error:', cleanupError);
       }
 
-      await Rawk.updateStatus(rawk.id, 'error');
+      // DELETE the database record (don't just mark as error)
+      try {
+        console.log(`Deleting database record for failed deployment: ${rawk.id}`);
+        await pool.query('DELETE FROM rawks WHERE id = $1', [rawk.id]);
+      } catch (deleteError) {
+        console.error('Failed to delete database record:', deleteError);
+      }
       
       throw deployError;
     }
