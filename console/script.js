@@ -172,17 +172,26 @@ function logout() {
   localStorage.removeItem('rawk_token');
   authToken = null;
   currentUser = null;
-  showLoginForm();
+  // Reload page to show fresh login
+  window.location.reload();
 }
 
 // Show login form
 function showLoginForm() {
-  // TODO: Implement proper login UI
+  // Show login prompt (better UI would be a modal)
+  alert('Please login to continue.');
   const email = prompt('Email:');
+  if (!email) {
+    // User cancelled
+    document.querySelector('.console-main').innerHTML = '<div style="padding: 2rem; text-align: center;"><h2>Please Login</h2><p>Refresh the page and enter your credentials to continue.</p></div>';
+    return;
+  }
   const password = prompt('Password:');
   
   if (email && password) {
     login(email, password);
+  } else {
+    showLoginForm();
   }
 }
 
