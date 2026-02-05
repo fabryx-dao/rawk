@@ -759,19 +759,13 @@ ol.learn-list li:before {
 }
 
 .diagram-item {
-  display: flex;
-  gap: var(--spacing);
-  align-items: flex-start;
   margin-bottom: calc(var(--spacing) * 1.5);
+  padding-left: 1rem;
+  border-left: 2px solid var(--dark);
 }
 
 .diagram-item:last-child {
   margin-bottom: 0;
-}
-
-.diagram-icon {
-  font-size: 2em;
-  min-width: 2ch;
 }
 
 .diagram-item strong {
@@ -849,14 +843,6 @@ ol.learn-list li:before {
   border: 1px solid var(--dark);
   padding: calc(var(--spacing) * 1.5);
   margin-bottom: var(--spacing);
-  display: flex;
-  gap: var(--spacing);
-  align-items: flex-start;
-}
-
-.access-icon {
-  font-size: 2em;
-  min-width: 2ch;
 }
 
 .access-content {
