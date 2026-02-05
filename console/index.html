@@ -31,7 +31,7 @@
       <!-- Sidebar Navigation -->
       <nav class="console-nav">
         <button class="nav-item active" data-panel="start">
-          <span class="nav-icon">►</span> Getting Started
+          <span class="nav-icon">►</span> My Rawk
         </button>
         <button class="nav-item" data-panel="learn">
           <span class="nav-icon">►</span> Learn
@@ -58,249 +58,108 @@
         
         <!-- Getting Started Panel -->
         <section class="panel active" id="panel-start">
-          <h1>Welcome to Your Rawk</h1>
+          <h1>My Rawk</h1>
           
-          <div class="wizard-intro">
-            <p class="wizard-text">Let's get your Rawk up and running. This will take about 5 minutes.</p>
-            <p class="wizard-text">We'll connect your Rawk to Telegram so you can chat with it from your phone.</p>
+          <!-- Quick Status -->
+          <div class="rawk-status-card">
+            <div class="status-main">
+              <span class="status-dot online"></span>
+              <div class="status-info">
+                <h2 class="status-title">Rawksh is Online</h2>
+                <p class="status-desc">Running in Hetzner Cloud (Nuremberg, Germany)</p>
+              </div>
+            </div>
+            <div class="status-actions">
+              <button class="btn btn-secondary" id="btn-restart-rawk">
+                Restart Rawk
+              </button>
+              <button class="btn btn-danger" id="btn-factory-reset">
+                Factory Reset
+              </button>
+            </div>
           </div>
 
-          <div class="wizard-container">
-            <!-- Step 1 -->
-            <div class="wizard-step" data-step="1">
-              <div class="wizard-step-header">
-                <span class="wizard-step-number">Step 1</span>
-                <span class="wizard-step-title">Name Your Rawk</span>
-              </div>
-              <div class="wizard-step-content">
-                <p class="wizard-help">What would you like to call your Rawk? (You can change this later)</p>
-                <input 
-                  type="text" 
-                  class="wizard-input" 
-                  id="wizard-name" 
-                  placeholder="e.g., Rocky, Agent Smith, Friday"
-                  value="Rawksh"
-                />
-                <button class="btn btn-primary wizard-next" data-next="2">Continue →</button>
+          <!-- Quick Access -->
+          <div class="quick-access">
+            <h2>Quick Access</h2>
+            
+            <div class="access-card">
+              <div class="access-icon">💬</div>
+              <div class="access-content">
+                <h3>Chat with Your Rawk</h3>
+                <p>Open Telegram and message your bot, or click Chat in the menu.</p>
               </div>
             </div>
 
-            <!-- Step 2 -->
-            <div class="wizard-step hidden" data-step="2">
-              <div class="wizard-step-header">
-                <span class="wizard-step-number">Step 2</span>
-                <span class="wizard-step-title">Get a Telegram Bot</span>
-              </div>
-              <div class="wizard-step-content">
-                <p class="wizard-help">Your Rawk needs a Telegram bot to talk to you. Here's how to get one:</p>
-                
-                <div class="wizard-instructions">
-                  <div class="instruction-step">
-                    <span class="instruction-number">1.</span>
-                    <span>Open Telegram and search for <strong>@BotFather</strong></span>
-                  </div>
-                  <div class="instruction-step">
-                    <span class="instruction-number">2.</span>
-                    <span>Send the message: <code>/newbot</code></span>
-                  </div>
-                  <div class="instruction-step">
-                    <span class="instruction-number">3.</span>
-                    <span>Follow the prompts to create your bot</span>
-                  </div>
-                  <div class="instruction-step">
-                    <span class="instruction-number">4.</span>
-                    <span>BotFather will give you a token that looks like: <code>123456:ABC-DEF...</code></span>
-                  </div>
-                  <div class="instruction-step">
-                    <span class="instruction-number">5.</span>
-                    <span>Copy that token and paste it below</span>
-                  </div>
+            <div class="access-card">
+              <div class="access-icon">🔧</div>
+              <div class="access-content">
+                <h3>SSH Access (Developers)</h3>
+                <div class="ssh-command">
+                  <code id="ssh-command">ssh dao@45.76.123.45</code>
+                  <button class="btn-copy" onclick="copySshCommand()">Copy</button>
                 </div>
-
-                <label class="wizard-label">Your Telegram Bot Token:</label>
-                <input 
-                  type="password" 
-                  class="wizard-input" 
-                  id="wizard-telegram-token" 
-                  placeholder="123456789:ABCdefGHIjklMNOpqrsTUVwxyz..."
-                />
-                
-                <div class="wizard-buttons">
-                  <button class="btn btn-secondary wizard-back" data-back="1">← Back</button>
-                  <button class="btn btn-primary wizard-next" data-next="3">Continue →</button>
-                </div>
+                <p class="access-note dim">Password will be emailed to you after deployment</p>
               </div>
             </div>
-
-            <!-- Step 3 -->
-            <div class="wizard-step hidden" data-step="3">
-              <div class="wizard-step-header">
-                <span class="wizard-step-number">Step 3</span>
-                <span class="wizard-step-title">AI Brain Power</span>
-              </div>
-              <div class="wizard-step-content">
-                <p class="wizard-help">Your Rawk needs an AI service to think. We recommend Anthropic's Claude.</p>
-                
-                <div class="wizard-instructions">
-                  <div class="instruction-step">
-                    <span class="instruction-number">1.</span>
-                    <span>Go to <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></span>
-                  </div>
-                  <div class="instruction-step">
-                    <span class="instruction-number">2.</span>
-                    <span>Create an account (you'll need to add a payment method)</span>
-                  </div>
-                  <div class="instruction-step">
-                    <span class="instruction-number">3.</span>
-                    <span>Go to API Keys and create a new key</span>
-                  </div>
-                  <div class="instruction-step">
-                    <span class="instruction-number">4.</span>
-                    <span>Copy the key (starts with <code>sk-ant-...</code>) and paste below</span>
-                  </div>
-                </div>
-
-                <label class="wizard-label">Your Anthropic API Key:</label>
-                <input 
-                  type="password" 
-                  class="wizard-input" 
-                  id="wizard-anthropic-key" 
-                  placeholder="sk-ant-api03-..."
-                />
-                
-                <div class="wizard-note">
-                  <strong>💡 Tip:</strong> Claude usage is pay-as-you-go. Most people spend $5-20/month for normal use.
-                </div>
-                
-                <div class="wizard-buttons">
-                  <button class="btn btn-secondary wizard-back" data-back="2">← Back</button>
-                  <button class="btn btn-primary wizard-next" data-next="4">Continue →</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Step 4 - Review & Deploy -->
-            <div class="wizard-step hidden" data-step="4">
-              <div class="wizard-step-header">
-                <span class="wizard-step-number">Step 4</span>
-                <span class="wizard-step-title">Ready to Launch</span>
-              </div>
-              <div class="wizard-step-content">
-                <p class="wizard-help">Let's review your setup:</p>
-                
-                <div class="wizard-review">
-                  <div class="review-item">
-                    <span class="review-label">Rawk Name:</span>
-                    <span class="review-value" id="review-name">—</span>
-                  </div>
-                  <div class="review-item">
-                    <span class="review-label">Telegram Bot:</span>
-                    <span class="review-value" id="review-telegram">Connected ✓</span>
-                  </div>
-                  <div class="review-item">
-                    <span class="review-label">AI Service:</span>
-                    <span class="review-value" id="review-ai">Anthropic Claude ✓</span>
-                  </div>
-                  <div class="review-item">
-                    <span class="review-label">Deploy Location:</span>
-                    <span class="review-value">Hetzner Cloud (Germany)</span>
-                  </div>
-                  <div class="review-item">
-                    <span class="review-label">Estimated Time:</span>
-                    <span class="review-value">3-4 minutes</span>
-                  </div>
-                </div>
-
-                <div class="wizard-note">
-                  <strong>What happens next?</strong><br>
-                  We'll create a cloud server, install your Rawk, and connect it to Telegram. 
-                  When it's done, you can start chatting with your Rawk in Telegram!
-                </div>
-                
-                <div class="wizard-buttons">
-                  <button class="btn btn-secondary wizard-back" data-back="3">← Back</button>
-                  <button class="btn btn-primary" id="wizard-deploy" style="font-size: 1.1em; padding: 0.75rem 2rem;">
-                    🚀 Deploy My Rawk
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Step 5 - Deploying -->
-            <div class="wizard-step hidden" data-step="5">
-              <div class="wizard-step-header">
-                <span class="wizard-step-number">Deploying...</span>
-              </div>
-              <div class="wizard-step-content">
-                <div class="wizard-deploying">
-                  <div class="wizard-spinner">⟳</div>
-                  <p class="wizard-help">Setting up your Rawk... This will take a few minutes.</p>
-                  
-                  <div class="deploy-progress">
-                    <div class="progress-item">
-                      <span class="progress-icon">◯</span>
-                      <span class="progress-text" id="progress-1">Creating cloud server...</span>
-                    </div>
-                    <div class="progress-item">
-                      <span class="progress-icon">◯</span>
-                      <span class="progress-text" id="progress-2">Installing OpenClaw...</span>
-                    </div>
-                    <div class="progress-item">
-                      <span class="progress-icon">◯</span>
-                      <span class="progress-text" id="progress-3">Connecting to Telegram...</span>
-                    </div>
-                    <div class="progress-item">
-                      <span class="progress-icon">◯</span>
-                      <span class="progress-text" id="progress-4">Starting your Rawk...</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Step 6 - Success -->
-            <div class="wizard-step hidden" data-step="6">
-              <div class="wizard-step-header">
-                <span class="wizard-step-number">✓ Success!</span>
-              </div>
-              <div class="wizard-step-content">
-                <div class="wizard-success">
-                  <p class="wizard-help success-message">Your Rawk is alive! 🎉</p>
-                  
-                  <div class="wizard-instructions">
-                    <p><strong>What to do next:</strong></p>
-                    <div class="instruction-step">
-                      <span class="instruction-number">1.</span>
-                      <span>Open Telegram and find your bot (the one you created)</span>
-                    </div>
-                    <div class="instruction-step">
-                      <span class="instruction-number">2.</span>
-                      <span>Send it any message to start chatting</span>
-                    </div>
-                    <div class="instruction-step">
-                      <span class="instruction-number">3.</span>
-                      <span>Your Rawk will introduce itself!</span>
-                    </div>
-                  </div>
-
-                  <div class="wizard-note">
-                    <strong>💡 Pro tip:</strong> You can also chat with your Rawk right here in the console. 
-                    Just click "Chat" in the menu on the left.
-                  </div>
-
-                  <div class="wizard-buttons">
-                    <button class="btn btn-primary" onclick="window.location.reload()">
-                      Go to Dashboard
-                    </button>
-                    <button class="btn btn-secondary" onclick="showPanel('learn')">
-                      Learn About Your Rawk
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
           </div>
+
+          <!-- Server Stats -->
+          <div class="server-stats">
+            <h2>Server Resources</h2>
+            
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-label">CPU Usage</div>
+                <div class="stat-value">12%</div>
+                <div class="stat-bar">
+                  <div class="stat-fill" style="width: 12%"></div>
+                </div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-label">Memory</div>
+                <div class="stat-value">847 MB / 2 GB</div>
+                <div class="stat-bar">
+                  <div class="stat-fill" style="width: 42%"></div>
+                </div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-label">Disk Space</div>
+                <div class="stat-value">3.2 GB / 40 GB</div>
+                <div class="stat-bar">
+                  <div class="stat-fill" style="width: 8%"></div>
+                </div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-label">Monthly Cost</div>
+                <div class="stat-value">$4.99</div>
+                <div class="stat-note dim">Server hosting</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-label">Uptime</div>
+                <div class="stat-value">7d 14h 23m</div>
+                <div class="stat-note dim">Since last restart</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-label">IP Address</div>
+                <div class="stat-value">45.76.123.45</div>
+                <div class="stat-note dim">Hetzner Nuremberg</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Links -->
+          <div class="quick-links">
+            <a href="#" class="link" onclick="showPanel('deploy'); return false;">View Deployment Logs →</a>
+            <a href="#" class="link" onclick="showPanel('config'); return false;">View Full Configuration →</a>
+            <a href="#" class="link" onclick="showPanel('learn'); return false;">Learn About Your Rawk →</a>
+          </div>
+
         </section>
         
         <!-- Learn Panel -->

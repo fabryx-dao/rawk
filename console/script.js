@@ -230,6 +230,38 @@ document.querySelector('.btn-danger')?.addEventListener('click', () => {
   }
 });
 
+// Copy SSH command
+function copySshCommand() {
+  const command = document.getElementById('ssh-command').textContent;
+  navigator.clipboard.writeText(command).then(() => {
+    const btn = event.target;
+    const originalText = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.style.background = var(--lichen);
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.style.background = '';
+    }, 2000);
+  });
+}
+
+// Restart Rawk
+document.getElementById('btn-restart-rawk')?.addEventListener('click', () => {
+  if (confirm('Restart your Rawk? This will cause a brief interruption (about 30 seconds).')) {
+    alert('Restarting... (This is a demo - backend integration needed)');
+  }
+});
+
+// Factory Reset
+document.getElementById('btn-factory-reset')?.addEventListener('click', () => {
+  const confirmation = prompt('Type "RESET" to confirm factory reset. This will DELETE ALL DATA and redeploy from scratch.');
+  if (confirmation === 'RESET') {
+    alert('Factory reset initiated... (This is a demo - backend integration needed)');
+  } else if (confirmation !== null) {
+    alert('Reset cancelled - confirmation did not match.');
+  }
+});
+
 // Update status indicator on page load (simulated)
 window.addEventListener('load', () => {
   // In production, this would check actual server status
@@ -238,14 +270,16 @@ window.addEventListener('load', () => {
     const deployStatus = document.getElementById('deploy-status');
     
     // Simulate checking status
-    const isOnline = false; // Change to true to simulate online state
+    const isOnline = true; // Changed to true to show My Rawk as online
     
     if (isOnline) {
       statusIndicator.textContent = '● online';
       statusIndicator.classList.add('online');
-      deployStatus.textContent = 'Online';
-      document.getElementById('server-location').textContent = 'Hetzner (Nuremberg)';
-      document.getElementById('server-url').innerHTML = '<a href="https://rawk-user.tail123.ts.net" target="_blank">rawk-user.tail123.ts.net</a>';
+      if (deployStatus) {
+        deployStatus.textContent = 'Online';
+        document.getElementById('server-location').textContent = 'Hetzner (Nuremberg)';
+        document.getElementById('server-url').innerHTML = '<a href="https://rawk-user.tail123.ts.net" target="_blank">rawk-user.tail123.ts.net</a>';
+      }
     }
   }, 500);
 });
