@@ -472,6 +472,219 @@ input[type="checkbox"] {
   margin-right: 0.5rem;
 }
 
+/* Wizard Styles */
+.wizard-intro {
+  margin-bottom: calc(var(--spacing) * 2);
+  max-width: 600px;
+}
+
+.wizard-text {
+  font-size: 1.1em;
+  line-height: 1.6;
+  margin-bottom: var(--spacing);
+  color: var(--light);
+}
+
+.wizard-container {
+  max-width: 700px;
+}
+
+.wizard-step {
+  background: var(--darker);
+  border: 1px solid var(--dark);
+  margin-bottom: var(--spacing);
+}
+
+.wizard-step.hidden {
+  display: none;
+}
+
+.wizard-step-header {
+  padding: var(--spacing);
+  border-bottom: 1px solid var(--dark);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing);
+}
+
+.wizard-step-number {
+  color: var(--lichen);
+  font-weight: 700;
+}
+
+.wizard-step-title {
+  font-size: 1.1em;
+}
+
+.wizard-step-content {
+  padding: calc(var(--spacing) * 2);
+}
+
+.wizard-help {
+  margin-bottom: var(--spacing);
+  color: var(--light);
+  font-size: 1em;
+  line-height: 1.6;
+}
+
+.wizard-instructions {
+  background: var(--dark);
+  padding: var(--spacing);
+  margin: var(--spacing) 0;
+  border-left: 3px solid var(--lichen);
+}
+
+.instruction-step {
+  display: flex;
+  gap: var(--spacing);
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+.instruction-step:last-child {
+  margin-bottom: 0;
+}
+
+.instruction-number {
+  color: var(--lichen);
+  font-weight: 700;
+  min-width: 2ch;
+}
+
+.wizard-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--dim);
+}
+
+.wizard-input {
+  width: 100%;
+  max-width: 500px;
+  background: var(--dark);
+  border: 1px solid var(--subtle);
+  color: var(--light);
+  padding: 0.75rem var(--spacing);
+  font-family: inherit;
+  font-size: inherit;
+  margin-bottom: var(--spacing);
+}
+
+.wizard-input:focus {
+  outline: none;
+  border-color: var(--lichen);
+}
+
+.wizard-buttons {
+  display: flex;
+  gap: var(--spacing);
+  margin-top: calc(var(--spacing) * 2);
+}
+
+.wizard-note {
+  background: var(--dark);
+  padding: var(--spacing);
+  margin: var(--spacing) 0;
+  border-left: 3px solid var(--lichen);
+  line-height: 1.6;
+}
+
+.wizard-review {
+  background: var(--dark);
+  padding: var(--spacing);
+  margin: var(--spacing) 0;
+}
+
+.review-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--darker);
+}
+
+.review-item:last-child {
+  border-bottom: none;
+}
+
+.review-label {
+  color: var(--dim);
+}
+
+.review-value {
+  color: var(--light);
+}
+
+.wizard-deploying {
+  text-align: center;
+  padding: calc(var(--spacing) * 2);
+}
+
+.wizard-spinner {
+  font-size: 3em;
+  color: var(--lichen);
+  animation: spin 2s linear infinite;
+  margin-bottom: var(--spacing);
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.deploy-progress {
+  text-align: left;
+  margin-top: calc(var(--spacing) * 2);
+}
+
+.progress-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing);
+  margin-bottom: var(--spacing);
+}
+
+.progress-icon {
+  color: var(--dim);
+  font-weight: 700;
+}
+
+.progress-icon.active {
+  color: var(--lichen);
+}
+
+.progress-icon.complete {
+  color: var(--lichen);
+}
+
+.progress-text {
+  color: var(--dim);
+}
+
+.progress-text.active {
+  color: var(--light);
+}
+
+.progress-text.complete {
+  color: var(--subtle);
+}
+
+.wizard-success {
+  text-align: center;
+  padding: calc(var(--spacing) * 2);
+}
+
+.success-message {
+  font-size: 1.5em;
+  color: var(--lichen);
+  margin-bottom: calc(var(--spacing) * 2);
+}
+
+code {
+  background: var(--dark);
+  padding: 0.2em 0.5em;
+  color: var(--lichen);
+  font-family: inherit;
+}
+
 /* Utility Classes */
 .dim {
   color: var(--dim);
@@ -479,6 +692,10 @@ input[type="checkbox"] {
 
 .subtle {
   color: var(--subtle);
+}
+
+.hidden {
+  display: none;
 }
 
 /* Mobile Responsive */
