@@ -34,12 +34,28 @@ class Rawk {
       fields.push(`deployed_at = $${paramCount++}`);
       values.push(data.deployedAt);
     }
+    if (data.dnsRecordId) {
+      fields.push(`config = config || jsonb_build_object('dns_record_id', $${paramCount++}::text)`);
+      values.push(data.dnsRecordId.toString());
+    }
+    if (data.emailAlias) {
+      fields.push(`config = config || jsonb_build_object('email_alias', $${paramCount++}::text)`);
+      values.push(data.emailAlias);
+    }
 
     values.push(id);
     const query = `UPDATE rawks SET ${fields.join(', ')} WHERE id = $${paramCount} RETURNING *`;
     
     const result = await pool.query(query, values);
     return result.rows[0];
+  }
+
+  static async checkNameExists(name) {
+    const result = await pool.query(
+      'SELECT id FROM rawks WHERE name = $1',
+      [name]
+    );
+    return result.rows.length > 0;
   }
 }
 
