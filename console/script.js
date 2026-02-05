@@ -83,8 +83,7 @@ function showDeployedState(rawk) {
   }
 
   // Show My Rawk panel
-  document.getElementById('panel-start').style.display = 'block';
-  document.getElementById('panel-deploy').style.display = 'none';
+  showPanel('start');
 }
 
 // Show not deployed state
@@ -93,8 +92,7 @@ function showNotDeployedState() {
   statusIndicator.textContent = '● not deployed';
   statusIndicator.classList.remove('online');
 
-  // Hide My Rawk, show Deploy
-  document.getElementById('panel-start').style.display = 'none';
+  // Show Deploy panel
   showPanel('deploy');
 }
 
