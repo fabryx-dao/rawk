@@ -233,19 +233,7 @@ video {
 }
 
 .inline-buy-btn {
-  display: block;
-}
-
-.btn-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.btn-group > a {
-  display: block;
-  padding: 3px 6px;
-  text-align: center;
+  display: inline-block;
 }
 
 /* Desktop: show fixed button, hide inline buttons */
