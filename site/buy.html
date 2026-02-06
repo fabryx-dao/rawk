@@ -123,6 +123,94 @@
     .btn-minimal:hover {
       color: var(--fg);
     }
+
+    /* Geoblock modal */
+    .geoblock-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .geoblock-overlay.is-visible {
+      display: flex;
+    }
+
+    .geoblock-modal {
+      background: black;
+      border: 1px solid var(--light);
+      padding: calc(2 * var(--line-height)) 4ch;
+      max-width: 52ch;
+      width: 90vw;
+      font-family: inherit;
+      font-size: inherit;
+      line-height: inherit;
+      color: var(--light);
+      display: flex;
+      flex-direction: column;
+      gap: var(--line-height);
+    }
+
+    .geoblock-modal .modal-title {
+      font-weight: 700;
+      font-size: 1.1em;
+    }
+
+    .geoblock-modal input[type="email"] {
+      font: inherit;
+      background: transparent;
+      border: 1px solid var(--light);
+      color: var(--light);
+      padding: calc(0.4 * var(--line-height)) 1ch;
+      width: 100%;
+    }
+
+    .geoblock-modal input[type="email"]::placeholder {
+      color: var(--dim);
+    }
+
+    .geoblock-modal input[type="email"]:focus {
+      outline: none;
+      border-color: var(--lichen);
+    }
+
+    .geoblock-modal .btn-submit {
+      display: inline-block;
+      background: var(--lichen);
+      color: var(--dark);
+      border: none;
+      font: inherit;
+      font-weight: 700;
+      padding: calc(0.4 * var(--line-height)) 2ch;
+      cursor: pointer;
+      align-self: flex-start;
+    }
+
+    .geoblock-modal .btn-submit:hover {
+      opacity: 0.9;
+    }
+
+    .geoblock-modal .btn-close {
+      background: none;
+      border: none;
+      color: var(--dim);
+      font: inherit;
+      cursor: pointer;
+      padding: 0;
+      align-self: flex-start;
+    }
+
+    .geoblock-modal .btn-close:hover {
+      color: var(--light);
+    }
+
+    .geoblock-modal .signup-confirm {
+      color: var(--lichen);
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -201,6 +289,21 @@
     </div>
   </section>
 
+  <!-- Geoblock modal -->
+  <div class="geoblock-overlay" id="geoblock-overlay">
+    <div class="geoblock-modal">
+      <span class="modal-title">Region Unavailable</span>
+      <span>We are currently unable to accept orders from EU, UK, and Switzerland while we undergo VAT registration. Orders from these locations will be refunded.</span>
+      <span>Sign up to be notified when we can serve your region:</span>
+      <form id="geoblock-form" onsubmit="return false;">
+        <input type="email" id="geoblock-email" placeholder="your@email.com" required />
+      </form>
+      <button class="btn-submit" id="geoblock-submit">NOTIFY ME</button>
+      <span class="signup-confirm" id="geoblock-confirm">Thank you! We'll notify you when ordering is available in your region.</span>
+      <button class="btn-close" id="geoblock-close">Close</button>
+    </div>
+  </div>
+
   <script>
     // Virtual Rawk plan selector
     const virtualPlans = document.querySelectorAll('input[name="virtual-plan"]');
@@ -221,6 +324,96 @@
     virtualPlans.forEach(input => input.addEventListener('change', updateVirtualPrice));
   </script>
   
+  <script>
+    // Geoblocking — intercept buy buttons for VAT countries
+    (function () {
+      const VAT_COUNTRIES = [
+        'AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU',
+        'IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES',
+        'SE','GB','CH'
+      ];
+
+      let geoResult = null;       // null = not fetched, true = blocked, false = allowed
+      let geoPromise = null;
+
+      function fetchGeo() {
+        if (geoPromise) return geoPromise;
+        geoPromise = fetch('https://ipapi.co/json/')
+          .then(r => r.json())
+          .then(data => {
+            geoResult = VAT_COUNTRIES.includes(data.country_code);
+            return geoResult;
+          })
+          .catch(() => {
+            geoResult = false; // allow on error so we don't block real customers
+            return false;
+          });
+        return geoPromise;
+      }
+
+      // Start the geo lookup immediately on page load
+      fetchGeo();
+
+      const overlay = document.getElementById('geoblock-overlay');
+      const closeBtn = document.getElementById('geoblock-close');
+      const submitBtn = document.getElementById('geoblock-submit');
+      const emailInput = document.getElementById('geoblock-email');
+      const confirmMsg = document.getElementById('geoblock-confirm');
+
+      function showModal() {
+        overlay.classList.add('is-visible');
+      }
+
+      function hideModal() {
+        overlay.classList.remove('is-visible');
+      }
+
+      closeBtn.addEventListener('click', hideModal);
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) hideModal();
+      });
+
+      submitBtn.addEventListener('click', function () {
+        if (!emailInput.value || !emailInput.validity.valid) {
+          emailInput.focus();
+          return;
+        }
+        // TODO: wire up to mailing list backend
+        console.log('Geoblock waitlist signup:', emailInput.value);
+        submitBtn.style.display = 'none';
+        emailInput.style.display = 'none';
+        confirmMsg.style.display = 'block';
+      });
+
+      // Intercept all buy links
+      document.querySelectorAll('a.btn-hero, a.btn-standard').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          // If we already know they're blocked, show modal immediately
+          if (geoResult === true) {
+            e.preventDefault();
+            showModal();
+            return;
+          }
+
+          // If geo hasn't resolved yet, wait for it
+          if (geoResult === null) {
+            e.preventDefault();
+            fetchGeo().then(function (blocked) {
+              if (blocked) {
+                showModal();
+              } else {
+                window.location.href = link.href;
+              }
+            });
+            return;
+          }
+
+          // geoResult === false — allowed, let the click proceed normally
+        });
+      });
+    })();
+  </script>
+
   <script src="script.js"></script>
 </body>
 </html>
