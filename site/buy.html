@@ -173,16 +173,16 @@
         <span>Choose your plan:</span>
         <span class="spacer-1"></span>
         <div class="radio-option">
-          <input type="radio" name="virtual-plan" id="plan-standard" value="12" data-specs="4GB RAM / 40GB storage" checked>
+          <input type="radio" name="virtual-plan" id="plan-standard" value="12" data-specs="4GB RAM / 40GB storage" data-link="https://buy.stripe.com/00w9AUeob9ukgkqaURcMM01" checked>
           <label for="plan-standard">Standard: 4GB RAM / 40GB storage — $12/month</label>
         </div>
         <div class="radio-option">
-          <input type="radio" name="virtual-plan" id="plan-pro" value="20" data-specs="8GB RAM / 80GB storage">
+          <input type="radio" name="virtual-plan" id="plan-pro" value="20" data-specs="8GB RAM / 80GB storage" data-link="https://buy.stripe.com/fZucN60xl35Wc4a4wtcMM02">
           <label for="plan-pro">Pro: 8GB RAM / 80GB storage — $20/month</label>
         </div>
         
         <span class="spacer-1"></span>
-        <a class="btn-standard" href="#" id="virtual-btn">START NOW — $12/month</a>
+        <a class="btn-standard" href="https://buy.stripe.com/00w9AUeob9ukgkqaURcMM01" id="virtual-btn">START NOW — $12/month</a>
         <span class="spacer-1"></span>
         <span class="dim" id="annual-price">or $120/year (save $24)</span>
       </div>
@@ -209,6 +209,7 @@
       const savings = monthlyPrice * 2; // 2 months free
       
       virtualBtn.textContent = `START NOW — $${monthlyPrice}/month`;
+      virtualBtn.href = selectedPlan.dataset.link;
       annualPriceEl.textContent = `or $${annualTotal}/year (save $${savings})`;
     }
 
