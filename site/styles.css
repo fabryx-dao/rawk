@@ -224,58 +224,40 @@ video {
   color: var(--lichen);
 }
 
-/* Fixed button group (desktop, top-right) */
-.fixed-btn-group {
+.fixed-buy-btn {
   position: fixed;
   top: 1.5em;
   right: 2em;
   z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.fixed-btn-group > a {
-  display: block;
   padding: 3px 6px;
-  text-align: center;
-}
-
-/* Inline button group (mobile, stacked) */
-.inline-btn-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  align-items: flex-start;
-}
-
-.inline-group-buy,
-.inline-group-login {
-  display: block;
-  padding: 0 2px;
-  text-align: center;
-  min-width: 22ch;
 }
 
 .inline-buy-btn {
   display: inline-block;
 }
 
-.inline-buy-btn.inline-btn-group {
+.btn-group {
   display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-/* Desktop: show fixed buttons, hide inline buttons */
+.btn-group > a {
+  display: block;
+  padding: 3px 6px;
+  text-align: center;
+}
+
+/* Desktop: show fixed button, hide inline buttons */
 @media (min-width: 1081px) {
-  .inline-buy-btn,
-  .inline-buy-btn.inline-btn-group {
+  .inline-buy-btn {
     display: none;
   }
 }
 
-/* Mobile: hide fixed buttons, show inline buttons */
+/* Mobile: hide fixed button, show inline buttons */
 @media (max-width: 1080px) {
-  .fixed-btn-group {
+  .fixed-buy-btn {
     display: none;
   }
 }
