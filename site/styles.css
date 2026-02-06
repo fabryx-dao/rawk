@@ -280,15 +280,15 @@ video {
 
 .btn-outline {
   padding: 0 2px;
-  border: 1px solid var(--lichen);
-  color: var(--lichen);
+  border: 1px solid var(--dim);
+  color: var(--dim);
   font: inherit;
   background-color: transparent;
   cursor: pointer;
 }
 
 .btn-outline:hover {
-  background-color: var(--lichen);
+  background-color: var(--dim);
   color: var(--dark);
   text-decoration: none;
 }
