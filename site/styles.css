@@ -233,7 +233,7 @@ video {
 }
 
 .inline-buy-btn {
-  display: inline-block;
+  display: block;
 }
 
 .btn-group {
